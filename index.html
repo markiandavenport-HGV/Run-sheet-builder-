@@ -1,374 +1,454 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Run Sheet Builder</title>
-  <style>
-    :root {
-      --border: #d6d6d6;
-      --soft: #f5f5f5;
-      --text: #111;
-      --muted: #666;
-      --button: #efefef;
-      --button-hover: #e2e2e2;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RMU Runsheet</title>
 
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      color: var(--text);
-      margin: 16px;
-      background: white;
-    }
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 14px;
+    color: #111;
+  }
 
-    h1 {
-      margin: 0 0 8px;
-      font-size: 22px;
-    }
+  h1 {
+    margin: 0 0 10px;
+    font-size: 28px;
+  }
 
-    .top-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 14px;
-    }
+  input, select, button {
+    font: inherit;
+    min-height: 46px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    width: 100%;
+  }
 
-    .meta {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 6px 10px;
-      font-size: 14px;
-      max-width: 520px;
-    }
+  button {
+    background: #eee;
+    font-weight: bold;
+    cursor: pointer;
+  }
 
-    .meta label {
-      font-weight: bold;
-      align-self: center;
-    }
+  .primary {
+    background: #e7f2ff;
+    border-color: #8bb8e8;
+  }
 
-    input, select {
-      font: inherit;
-      padding: 8px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      box-sizing: border-box;
-      width: 100%;
-    }
+  .danger {
+    background: #ffecec;
+    border-color: #e1a5a5;
+  }
 
-    button {
-      font: inherit;
-      border: 1px solid #bbb;
-      background: var(--button);
-      padding: 9px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      min-height: 40px;
-    }
+  .selected {
+    background: #d9f7df;
+    border-color: #63b96f;
+  }
 
-    button:hover {
-      background: var(--button-hover);
-    }
+  .top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
 
-    .danger {
-      background: #ffecec;
-      border-color: #e1a5a5;
-    }
+  .meta {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 8px;
+    align-items: center;
+    max-width: 520px;
+  }
 
-    .primary {
-      background: #e9f3ff;
-      border-color: #9bbfe7;
-      font-weight: bold;
-    }
+  .meta label {
+    font-weight: bold;
+  }
 
-    .quick-buttons {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
-      gap: 8px;
-      margin: 10px 0 18px;
-    }
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 14px;
+    padding: 12px;
+    margin-bottom: 14px;
+  }
 
-    .form-card {
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px;
-      background: #fff;
-      margin-bottom: 16px;
-    }
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 12px;
+  }
 
+  label {
+    font-size: 12px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .locations {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .location-box {
+    border: 1px solid #ddd;
+    border-radius: 14px;
+    padding: 10px;
+    background: #fafafa;
+  }
+
+  .location-box h3 {
+    margin: 0 0 8px;
+  }
+
+  .button-stack {
+    display: grid;
+    gap: 8px;
+  }
+
+  .selection {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 10px 0;
+  }
+
+  .selection div {
+    border: 1px dashed #aaa;
+    border-radius: 12px;
+    padding: 10px;
+    font-weight: bold;
+  }
+
+  .selection span {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    font-weight: normal;
+  }
+
+  .picker-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .picker-row.three {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .top-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 10px 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 12px;
+  }
+
+  th {
+    background: #f3f3f3;
+    text-align: left;
+    border-bottom: 1px solid #999;
+    padding: 8px 6px;
+  }
+
+  td {
+    border-bottom: 1px solid #ddd;
+    padding: 8px 6px;
+    word-wrap: break-word;
+  }
+
+  .open-row {
+    background: #fffceb;
+  }
+
+  .open-row td:first-child::after {
+    content: " open";
+    color: #9a6a00;
+    font-size: 10px;
+  }
+
+  .nights-row td {
+    font-weight: bold;
+    border-top: 1px solid #999;
+  }
+
+  .small-btn {
+    min-height: 30px;
+    padding: 4px;
+    font-size: 11px;
+  }
+
+  .print-title {
+    display: none;
+  }
+
+  @media (max-width: 760px) {
     .form-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(140px, 1fr));
-      gap: 10px;
-    }
-
-    .form-grid label {
-      font-size: 12px;
-      font-weight: bold;
-      color: #333;
-      display: block;
-      margin-bottom: 4px;
+      grid-template-columns: 1fr 1fr;
     }
 
     .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 12px 0 18px;
+      grid-template-columns: 1fr;
     }
 
-    .hint {
-      color: var(--muted);
-      font-size: 13px;
-      margin: 8px 0 0;
+    .top-actions {
+      grid-template-columns: 1fr 1fr;
     }
 
     table {
-      width: 100%;
-      border-collapse: collapse;
-      table-layout: fixed;
-      font-size: 12px;
+      font-size: 10px;
+    }
+  }
+
+  @media print {
+    @page {
+      size: A4 landscape;
+      margin: 8mm;
     }
 
-    th {
-      text-align: left;
-      background: var(--soft);
-      border-bottom: 1px solid #999;
-      padding: 8px 6px;
-    }
-
-    td {
-      border-bottom: 1px solid var(--border);
-      padding: 8px 6px;
-      vertical-align: middle;
-      word-wrap: break-word;
-    }
-
-    .day-cell {
-      font-weight: bold;
-      width: 10%;
-    }
-
-    .nights-row td {
-      font-weight: bold;
-      border-top: 1px solid #999;
-    }
-
-    .small-btn {
-      padding: 4px 7px;
-      min-height: 28px;
-      font-size: 11px;
+    .no-print {
+      display: none !important;
     }
 
     .print-title {
-      display: none;
+      display: block;
+      margin-bottom: 8px;
     }
 
-    @media (max-width: 850px) {
-      .form-grid {
-        grid-template-columns: repeat(2, minmax(140px, 1fr));
-      }
-
-      table {
-        font-size: 11px;
-      }
+    table {
+      font-size: 9px;
     }
 
-    @media print {
-      @page {
-        size: A4 landscape;
-        margin: 8mm;
-      }
-
-      body {
-        margin: 0;
-      }
-
-      .no-print {
-        display: none !important;
-      }
-
-      .print-title {
-        display: block;
-        margin-bottom: 8px;
-      }
-
-      table {
-        font-size: 9px;
-      }
-
-      th, td {
-        padding: 5px 5px;
-        border-left: none !important;
-        border-right: none !important;
-      }
+    th, td {
+      border-left: none !important;
+      border-right: none !important;
+      padding: 5px;
     }
-  </style>
+
+    .open-row {
+      background: white;
+    }
+
+    .open-row td:first-child::after {
+      content: "";
+    }
+  }
+</style>
 </head>
 
 <body>
-  <div class="top-bar">
+
+<div class="top">
+  <h1>RMU Runsheet</h1>
+
+  <div class="meta">
+    <label>Driver:</label>
+    <input id="driver" value="Mark Davenport">
+
+    <label>Vehicle:</label>
+    <input id="vehicleDefault" value="GF20NXM">
+
+    <label>Nights out:</label>
+    <select id="nightsOut"></select>
+  </div>
+
+  <div class="top-actions no-print">
+    <button class="primary" onclick="printPdf()">Export / Save PDF</button>
+    <button onclick="downloadCsv()">Export CSV</button>
+    <button onclick="copyTable()">Copy table</button>
+    <button class="danger" onclick="clearAll()">Clear all</button>
+  </div>
+</div>
+
+<div class="card no-print">
+  <div class="form-grid">
     <div>
-      <h1>Run Sheet Builder</h1>
-
-      <div class="meta">
-        <label for="driver">Driver:</label>
-        <input id="driver" value="Mark Davenport">
-
-        <label for="vehicleDefault">Vehicle:</label>
-        <input id="vehicleDefault" value="GF20NXM">
-
-        <label for="nightsOut">Nights out:</label>
-        <input id="nightsOut" type="number" value="4" min="0" step="1">
-      </div>
-
-      <p class="hint no-print">
-        Data is saved in this browser. Export CSV or print/save as PDF when finished.
-      </p>
+      <label>Date picker</label>
+      <input id="datePicker" type="date" onchange="updateDateDayFromPicker()">
     </div>
 
-    <div class="actions no-print">
-      <button class="primary" onclick="printPdf()">Export / Save PDF</button>
-      <button onclick="downloadCsv()">Export CSV</button>
-      <button onclick="copyTable()">Copy table</button>
-      <button class="danger" onclick="clearAll()">Clear all</button>
+    <div>
+      <label>Date / Day on sheet</label>
+      <input id="dateDay" placeholder="Mon 27/04/26">
+    </div>
+
+    <div>
+      <label>Product</label>
+      <select id="product">
+        <option value="">Select</option>
+        <option>Loose</option>
+        <option>Bails</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Vehicle</label>
+      <input id="vehicle" value="GF20NXM">
     </div>
   </div>
 
-  <section class="form-card no-print">
-    <h2 style="margin-top:0;font-size:18px;">Quick location buttons</h2>
-
-    <p class="hint">
-      Press a button to pre-fill the form. Then add the ticket number and press <strong>Add row</strong>.
-    </p>
-
-    <div class="quick-buttons">
-      <button onclick="preset('tip','Oakleaf','Loose')">Oakleaf tip</button>
-      <button onclick="preset('load','Camberley','Loose')">Camberley load</button>
-      <button onclick="preset('tip','Crayford','Loose')">Crayford tip</button>
-      <button onclick="preset('load','Crayford','Bails')">Crayford load</button>
-      <button onclick="preset('tip','Sheerness','Bails')">Sheerness tip</button>
-      <button onclick="preset('load','Rainham','Loose')">Rainham load</button>
-    </div>
-
-    <div class="form-grid">
-      <div>
-        <label for="dateDay">Date / Day</label>
-        <input id="dateDay" placeholder="Mon 27/04/26">
-      </div>
-
-      <div>
-        <label for="movementType">Movement type</label>
-        <select id="movementType" onchange="applyMovementType()">
-          <option value="load-tip">Load + Tip row</option>
-          <option value="load">Load only</option>
-          <option value="tip">Tip only</option>
-        </select>
-      </div>
-
-      <div>
-        <label for="product">Product</label>
-        <select id="product">
-          <option value="">Select</option>
-          <option>Loose</option>
-          <option>Bails</option>
-        </select>
-      </div>
-
-      <div>
-        <label for="vehicle">Vehicle</label>
-        <input id="vehicle" value="GF20NXM">
-      </div>
-
-      <div>
-        <label for="loadedAt">Loaded at</label>
-        <input id="loadedAt" placeholder="Camberley">
-      </div>
-
-      <div>
-        <label for="loadTime">Load time</label>
-        <input id="loadTime" placeholder="08:31-09:15">
-      </div>
-
-      <div>
-        <label for="loadTicket">Load ticket number</label>
-        <input id="loadTicket" placeholder="58775">
-      </div>
-
-      <div>
-        <label for="tippedAt">Tipped at</label>
-        <input id="tippedAt" placeholder="Crayford">
-      </div>
-
-      <div>
-        <label for="tipTime">Tip time</label>
-        <input id="tipTime" placeholder="11:04-11:37">
-      </div>
-
-      <div>
-        <label for="tipTicket">Tipped ticket number</label>
-        <input id="tipTicket" placeholder="RN000564537">
-      </div>
-
-      <div>
-        <label for="diesel">Diesel</label>
-        <input id="diesel" placeholder="286L">
-      </div>
-
-      <div>
-        <label for="mileage">Mileage</label>
-        <input id="mileage" placeholder="Start: 461444 km">
+  <div class="locations">
+    <div class="location-box">
+      <h3>Loaded at</h3>
+      <div class="button-stack">
+        <button id="load-SUEZ" onclick="chooseLoad('SUEZ','Loose')">SUEZ</button>
+        <button id="load-Whites" onclick="chooseLoad('Whites','Loose')">Whites</button>
+        <button id="load-Rainham" onclick="chooseLoad('Rainham','Loose')">Rainham</button>
+        <button id="load-Crayford" onclick="chooseLoad('Crayford','Bails')">Crayford</button>
       </div>
     </div>
 
-    <div class="actions">
-      <button class="primary" onclick="addRow()">Add row</button>
-      <button onclick="clearForm()">Clear form</button>
-      <button onclick="newDay()">Next day</button>
+    <div class="location-box">
+      <h3>Tipped at</h3>
+      <div class="button-stack">
+        <button id="tip-Camberley" onclick="chooseTip('Camberley','Loose')">Camberley</button>
+        <button id="tip-Oakleaf" onclick="chooseTip('Oakleaf','Loose')">Oakleaf</button>
+        <button id="tip-Sheerness" onclick="chooseTip('Sheerness','Bails')">Sheerness</button>
+        <button id="tip-Crayford" onclick="chooseTip('Crayford','Loose')">Crayford</button>
+      </div>
     </div>
-  </section>
-
-  <div class="print-title">
-    <strong>Driver: <span id="printDriver"></span></strong><br>
-    <strong>Vehicle: <span id="printVehicle"></span></strong>
   </div>
 
-  <table id="runTable">
-    <thead>
-      <tr>
-        <th>Date / Day</th>
-        <th>Loaded at</th>
-        <th>Load ticket number</th>
-        <th>Tipped at</th>
-        <th>Tipped ticket number</th>
-        <th>Product</th>
-        <th>Vehicle</th>
-        <th>Diesel</th>
-        <th>Mileage</th>
-        <th class="no-print">Edit</th>
-      </tr>
-    </thead>
-    <tbody id="tbody"></tbody>
-  </table>
+  <div class="selection">
+    <div><span>Selected loading event</span><p id="loadDisplay">None selected</p></div>
+    <div><span>Selected tipping event</span><p id="tipDisplay">None selected</p></div>
+  </div>
+
+  <div class="form-grid">
+    <div>
+      <label>Load ticket number</label>
+      <input id="loadTicket" placeholder="RMP-SW8992">
+    </div>
+
+    <div>
+      <label>Tipped ticket number</label>
+      <input id="tipTicket" placeholder="116480">
+    </div>
+
+    <div>
+      <label>Litres / diesel</label>
+      <div class="picker-row">
+        <select id="litresHundreds"></select>
+        <select id="litresOnes"></select>
+      </div>
+    </div>
+
+    <div>
+      <label>Mileage</label>
+      <div class="picker-row three">
+        <select id="mileageType">
+          <option value="">Mileage</option>
+          <option value="Start: ">Start</option>
+          <option value="Finish: ">Finish</option>
+        </select>
+        <select id="mileageThousands"></select>
+        <select id="mileageRemainder"></select>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="primary" onclick="submitLoadingEvent()">Submit loading event</button>
+    <button class="primary" onclick="submitTippingEvent()">Submit tipping event</button>
+    <button onclick="startNewBlankRow()">Start new row</button>
+    <button onclick="clearCurrentEntry()">Clear entry</button>
+    <button onclick="newDay()">Next day</button>
+  </div>
+</div>
+
+<div class="print-title">
+  <strong>RMU Runsheet</strong><br>
+  <strong>Driver: <span id="printDriver"></span></strong><br>
+  <strong>Vehicle: <span id="printVehicle"></span></strong>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Date / Day</th>
+      <th>Loaded at</th>
+      <th>Load ticket number</th>
+      <th>Tipped at</th>
+      <th>Tipped ticket number</th>
+      <th>Product</th>
+      <th>Vehicle</th>
+      <th>Diesel</th>
+      <th>Mileage</th>
+      <th class="no-print">Edit</th>
+    </tr>
+  </thead>
+  <tbody id="tbody"></tbody>
+</table>
 
 <script>
-const storageKey = "markRunSheetRowsV1";
-const settingsKey = "markRunSheetSettingsV1";
+const rowsKey = "rmuRunsheetRowsEventEntryV1";
+const settingsKey = "rmuRunsheetSettingsEventEntryV1";
+
 let rows = [];
+let selectedLoad = "";
+let selectedTip = "";
 
 function el(id) {
   return document.getElementById(id);
 }
 
+function pad(num) {
+  return String(num).padStart(2, "0");
+}
+
+function addOptions(id, start, end, blank, padded) {
+  const box = el(id);
+  box.innerHTML = "";
+
+  if (blank) {
+    const opt = document.createElement("option");
+    opt.value = "";
+    opt.textContent = "-";
+    box.appendChild(opt);
+  }
+
+  for (let i = start; i <= end; i++) {
+    const opt = document.createElement("option");
+    opt.value = String(i);
+    opt.textContent = padded ? pad(i) : String(i);
+    box.appendChild(opt);
+  }
+}
+
+function initPickers() {
+  addOptions("nightsOut", 0, 7, false, false);
+  addOptions("litresHundreds", 0, 9, true, false);
+  addOptions("litresOnes", 0, 99, true, true);
+  addOptions("mileageThousands", 450, 499, true, false);
+  addOptions("mileageRemainder", 0, 999, true, true);
+
+  el("nightsOut").value = "4";
+}
+
 function saveSettings() {
-  const settings = {
+  localStorage.setItem(settingsKey, JSON.stringify({
     driver: el("driver").value || "Mark Davenport",
     vehicleDefault: el("vehicleDefault").value || "GF20NXM",
     nightsOut: el("nightsOut").value || "4"
-  };
-
-  localStorage.setItem(settingsKey, JSON.stringify(settings));
+  }));
 }
 
 function loadSettings() {
@@ -381,58 +461,198 @@ function loadSettings() {
 }
 
 function saveRows() {
-  localStorage.setItem(storageKey, JSON.stringify(rows));
+  localStorage.setItem(rowsKey, JSON.stringify(rows));
   saveSettings();
 }
 
 function loadRows() {
-  rows = JSON.parse(localStorage.getItem(storageKey) || "[]");
+  rows = JSON.parse(localStorage.getItem(rowsKey) || "[]");
   render();
 }
 
-function formatPlaceTime(place, time) {
-  place = (place || "").trim();
-  time = (time || "").trim();
+function formatDateForSheet(value) {
+  if (!value) return "";
 
-  return place && time ? `${place} ${time}` : place;
+  const date = new Date(value + "T00:00:00");
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  return `${days[date.getDay()]} ${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${String(date.getFullYear()).slice(-2)}`;
 }
 
-function addRow() {
-  const type = el("movementType").value;
-  const defaultVehicle = el("vehicleDefault").value || "GF20NXM";
-  const day = el("dateDay").value.trim();
+function updateDateDayFromPicker() {
+  const formatted = formatDateForSheet(el("datePicker").value);
+  if (formatted) el("dateDay").value = formatted;
+}
 
-  if (!day) {
-    alert("Please enter Date / Day first.");
+function clearSelectedButtons(prefix) {
+  document.querySelectorAll(`[id^="${prefix}-"]`).forEach(btn => btn.classList.remove("selected"));
+}
+
+function chooseLoad(location, product) {
+  selectedLoad = location;
+  el("loadDisplay").textContent = location;
+
+  clearSelectedButtons("load");
+  el(`load-${location}`).classList.add("selected");
+
+  if (!el("product").value) el("product").value = product || "";
+
+  el("loadTicket").focus();
+}
+
+function chooseTip(location, product) {
+  selectedTip = location;
+  el("tipDisplay").textContent = location;
+
+  clearSelectedButtons("tip");
+  el(`tip-${location}`).classList.add("selected");
+
+  if (!el("product").value) el("product").value = product || "";
+
+  el("tipTicket").focus();
+}
+
+function formatDiesel() {
+  const hundreds = el("litresHundreds").value;
+  const ones = el("litresOnes").value;
+
+  if (hundreds === "" && ones === "") return "";
+
+  const litres = Number(hundreds || 0) * 100 + Number(ones || 0);
+  return litres ? `${litres}L` : "";
+}
+
+function formatMileage() {
+  const thousands = el("mileageThousands").value;
+  const remainder = el("mileageRemainder").value;
+  const type = el("mileageType").value || "";
+
+  if (thousands === "" && remainder === "") return "";
+
+  const mileage = Number(thousands || 0) * 1000 + Number(remainder || 0);
+  return mileage ? `${type}${mileage} km` : "";
+}
+
+function extras() {
+  return {
+    product: el("product").value.trim(),
+    vehicle: el("vehicle").value.trim() || el("vehicleDefault").value || "GF20NXM",
+    diesel: formatDiesel(),
+    mileage: formatMileage()
+  };
+}
+
+function applyExtras(row, extra) {
+  if (extra.product) row.product = extra.product;
+  if (extra.vehicle) row.vehicle = extra.vehicle;
+  if (extra.diesel) row.diesel = extra.diesel;
+  if (extra.mileage) row.mileage = extra.mileage;
+}
+
+function latestOpenRowIndex() {
+  for (let i = rows.length - 1; i >= 0; i--) {
+    if (rows[i].loadedAt && !rows[i].tippedAt) return i;
+  }
+
+  return -1;
+}
+
+function submitLoadingEvent() {
+  const dateDay = el("dateDay").value.trim();
+
+  if (!dateDay) {
+    alert("Please choose a date first.");
     return;
   }
 
-  let row = {
-    dateDay: day,
-    loadedAt: formatPlaceTime(el("loadedAt").value, el("loadTime").value),
+  if (!selectedLoad) {
+    alert("Please press a loaded location on the left first.");
+    return;
+  }
+
+  const extra = extras();
+
+  rows.push({
+    dateDay,
+    loadedAt: selectedLoad,
     loadTicket: el("loadTicket").value.trim(),
-    tippedAt: formatPlaceTime(el("tippedAt").value, el("tipTime").value),
-    tipTicket: el("tipTicket").value.trim(),
-    product: el("product").value.trim(),
-    vehicle: el("vehicle").value.trim() || defaultVehicle,
-    diesel: el("diesel").value.trim(),
-    mileage: el("mileage").value.trim()
-  };
+    tippedAt: "",
+    tipTicket: "",
+    product: extra.product,
+    vehicle: extra.vehicle,
+    diesel: extra.diesel,
+    mileage: extra.mileage
+  });
 
-  if (type === "load") {
-    row.tippedAt = "";
-    row.tipTicket = "";
-  }
-
-  if (type === "tip") {
-    row.loadedAt = "";
-    row.loadTicket = "";
-  }
-
-  rows.push(row);
   saveRows();
   render();
-  clearFormKeepDay();
+  clearCurrentEntry(true);
+}
+
+function submitTippingEvent() {
+  const dateDay = el("dateDay").value.trim();
+
+  if (!dateDay) {
+    alert("Please choose a date first.");
+    return;
+  }
+
+  if (!selectedTip) {
+    alert("Please press a tipped location on the right first.");
+    return;
+  }
+
+  const extra = extras();
+  const openIndex = latestOpenRowIndex();
+
+  if (openIndex >= 0) {
+    rows[openIndex].tippedAt = selectedTip;
+    rows[openIndex].tipTicket = el("tipTicket").value.trim();
+    applyExtras(rows[openIndex], extra);
+  } else {
+    rows.push({
+      dateDay,
+      loadedAt: "",
+      loadTicket: "",
+      tippedAt: selectedTip,
+      tipTicket: el("tipTicket").value.trim(),
+      product: extra.product,
+      vehicle: extra.vehicle,
+      diesel: extra.diesel,
+      mileage: extra.mileage
+    });
+  }
+
+  saveRows();
+  render();
+  clearCurrentEntry(true);
+}
+
+function startNewBlankRow() {
+  const dateDay = el("dateDay").value.trim();
+
+  if (!dateDay) {
+    alert("Please choose a date first.");
+    return;
+  }
+
+  const extra = extras();
+
+  rows.push({
+    dateDay,
+    loadedAt: "",
+    loadTicket: "",
+    tippedAt: "",
+    tipTicket: "",
+    product: extra.product,
+    vehicle: extra.vehicle,
+    diesel: extra.diesel,
+    mileage: extra.mileage
+  });
+
+  saveRows();
+  render();
+  clearCurrentEntry(true);
 }
 
 function render() {
@@ -443,12 +663,14 @@ function render() {
 
   rows.forEach((row, index) => {
     const tr = document.createElement("tr");
-    const displayDay = row.dateDay === previousDay ? "" : row.dateDay;
 
+    if (row.loadedAt && !row.tippedAt) tr.className = "open-row";
+
+    const dayShown = row.dateDay === previousDay ? "" : row.dateDay;
     previousDay = row.dateDay;
 
     [
-      displayDay,
+      dayShown,
       row.loadedAt,
       row.loadTicket,
       row.tippedAt,
@@ -457,130 +679,103 @@ function render() {
       row.vehicle,
       row.diesel,
       row.mileage
-    ].forEach((value, colIndex) => {
+    ].forEach((value) => {
       const td = document.createElement("td");
       td.textContent = value || "";
-
-      if (colIndex === 0) {
-        td.className = "day-cell";
-      }
-
       tr.appendChild(td);
     });
 
-    const editTd = document.createElement("td");
-    editTd.className = "no-print";
-    editTd.innerHTML = `
+    const edit = document.createElement("td");
+    edit.className = "no-print";
+    edit.innerHTML = `
       <button class="small-btn" onclick="moveUp(${index})">↑</button>
       <button class="small-btn" onclick="moveDown(${index})">↓</button>
+      <button class="small-btn" onclick="editRow(${index})">Edit</button>
       <button class="small-btn danger" onclick="deleteRow(${index})">Delete</button>
     `;
+    tr.appendChild(edit);
 
-    tr.appendChild(editTd);
     tbody.appendChild(tr);
   });
 
-  const nightsRow = document.createElement("tr");
-  nightsRow.className = "nights-row";
+  const night = document.createElement("tr");
+  night.className = "nights-row";
 
-  const nights = el("nightsOut").value || "4";
-
-  ["Nights out:", nights, "", "", "", "", "", "", ""].forEach(value => {
+  ["Nights out:", el("nightsOut").value || "4", "", "", "", "", "", "", ""].forEach(value => {
     const td = document.createElement("td");
     td.textContent = value;
-    nightsRow.appendChild(td);
+    night.appendChild(td);
   });
 
-  const editTd = document.createElement("td");
-  editTd.className = "no-print";
-  nightsRow.appendChild(editTd);
+  const blank = document.createElement("td");
+  blank.className = "no-print";
+  night.appendChild(blank);
 
-  tbody.appendChild(nightsRow);
+  tbody.appendChild(night);
 
   el("printDriver").textContent = el("driver").value || "Mark Davenport";
   el("printVehicle").textContent = el("vehicleDefault").value || "GF20NXM";
 }
 
-function preset(type, place, product) {
-  el("movementType").value = type;
-  applyMovementType();
+function editRow(index) {
+  const row = rows[index];
 
-  el("product").value = product || "";
+  el("dateDay").value = row.dateDay || "";
+  selectedLoad = row.loadedAt || "";
+  selectedTip = row.tippedAt || "";
 
-  if (type === "load") {
-    el("loadedAt").value = place;
-    el("tippedAt").value = "";
-    el("tipTicket").value = "";
-    el("tipTime").value = "";
-    el("loadTicket").focus();
-  } else {
-    el("tippedAt").value = place;
-    el("loadedAt").value = "";
-    el("loadTicket").value = "";
-    el("loadTime").value = "";
-    el("tipTicket").focus();
-  }
+  el("loadDisplay").textContent = selectedLoad || "None selected";
+  el("tipDisplay").textContent = selectedTip || "None selected";
+  el("loadTicket").value = row.loadTicket || "";
+  el("tipTicket").value = row.tipTicket || "";
+  el("product").value = row.product || "";
+  el("vehicle").value = row.vehicle || el("vehicleDefault").value || "GF20NXM";
+
+  clearSelectedButtons("load");
+  clearSelectedButtons("tip");
+
+  if (selectedLoad && el(`load-${selectedLoad}`)) el(`load-${selectedLoad}`).classList.add("selected");
+  if (selectedTip && el(`tip-${selectedTip}`)) el(`tip-${selectedTip}`).classList.add("selected");
+
+  rows.splice(index, 1);
+  saveRows();
+  render();
 }
 
-function applyMovementType() {
-  const type = el("movementType").value;
+function clearCurrentEntry(keepDate = false) {
+  selectedLoad = "";
+  selectedTip = "";
 
-  if (type === "load") {
-    el("tippedAt").value = "";
-    el("tipTime").value = "";
-    el("tipTicket").value = "";
-  }
+  el("loadDisplay").textContent = "None selected";
+  el("tipDisplay").textContent = "None selected";
 
-  if (type === "tip") {
-    el("loadedAt").value = "";
-    el("loadTime").value = "";
-    el("loadTicket").value = "";
-  }
-}
+  clearSelectedButtons("load");
+  clearSelectedButtons("tip");
 
-function clearForm() {
-  [
-    "dateDay",
-    "loadedAt",
-    "loadTime",
-    "loadTicket",
-    "tippedAt",
-    "tipTime",
-    "tipTicket",
-    "diesel",
-    "mileage"
-  ].forEach(id => el(id).value = "");
-
+  el("loadTicket").value = "";
+  el("tipTicket").value = "";
   el("product").value = "";
-  el("movementType").value = "load-tip";
   el("vehicle").value = el("vehicleDefault").value || "GF20NXM";
-}
 
-function clearFormKeepDay() {
-  [
-    "loadedAt",
-    "loadTime",
-    "loadTicket",
-    "tippedAt",
-    "tipTime",
-    "tipTicket",
-    "diesel",
-    "mileage"
-  ].forEach(id => el(id).value = "");
+  el("litresHundreds").value = "";
+  el("litresOnes").value = "";
+  el("mileageType").value = "";
+  el("mileageThousands").value = "";
+  el("mileageRemainder").value = "";
 
-  el("product").value = "";
-  el("movementType").value = "load-tip";
-  el("vehicle").value = el("vehicleDefault").value || "GF20NXM";
+  if (!keepDate) {
+    el("datePicker").value = "";
+    el("dateDay").value = "";
+  }
 }
 
 function newDay() {
-  el("dateDay").value = "";
-  el("dateDay").focus();
+  clearCurrentEntry(false);
+  el("datePicker").focus();
 }
 
 function deleteRow(index) {
   if (!confirm("Delete this row?")) return;
-
   rows.splice(index, 1);
   saveRows();
   render();
@@ -588,7 +783,6 @@ function deleteRow(index) {
 
 function moveUp(index) {
   if (index <= 0) return;
-
   [rows[index - 1], rows[index]] = [rows[index], rows[index - 1]];
   saveRows();
   render();
@@ -596,15 +790,13 @@ function moveUp(index) {
 
 function moveDown(index) {
   if (index >= rows.length - 1) return;
-
   [rows[index + 1], rows[index]] = [rows[index], rows[index + 1]];
   saveRows();
   render();
 }
 
 function clearAll() {
-  if (!confirm("Clear all run sheet rows?")) return;
-
+  if (!confirm("Clear all rows?")) return;
   rows = [];
   saveRows();
   render();
@@ -640,14 +832,14 @@ function downloadCsv() {
   ];
 
   let previousDay = "";
-  let csvRows = [headers.map(csvEscape).join(",")];
+  const csv = [headers.map(csvEscape).join(",")];
 
   rows.forEach(row => {
-    const displayDay = row.dateDay === previousDay ? "" : row.dateDay;
+    const dayShown = row.dateDay === previousDay ? "" : row.dateDay;
     previousDay = row.dateDay;
 
-    csvRows.push([
-      displayDay,
+    csv.push([
+      dayShown,
       row.loadedAt,
       row.loadTicket,
       row.tippedAt,
@@ -659,27 +851,14 @@ function downloadCsv() {
     ].map(csvEscape).join(","));
   });
 
-  csvRows.push([
-    "Nights out:",
-    el("nightsOut").value || "4",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    ""
-  ].map(csvEscape).join(","));
+  csv.push(["Nights out:", el("nightsOut").value || "4", "", "", "", "", "", "", ""].map(csvEscape).join(","));
 
-  const blob = new Blob([csvRows.join("\n")], {
-    type: "text/csv;charset=utf-8"
-  });
-
+  const blob = new Blob([csv.join("\n")], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
 
   a.href = url;
-  a.download = "run-sheet.csv";
+  a.download = "rmu-runsheet.csv";
   a.click();
 
   URL.revokeObjectURL(url);
@@ -702,11 +881,11 @@ async function copyTable() {
   const lines = [headers.join("\t")];
 
   rows.forEach(row => {
-    const displayDay = row.dateDay === previousDay ? "" : row.dateDay;
+    const dayShown = row.dateDay === previousDay ? "" : row.dateDay;
     previousDay = row.dateDay;
 
     lines.push([
-      displayDay,
+      dayShown,
       row.loadedAt,
       row.loadTicket,
       row.tippedAt,
@@ -718,27 +897,17 @@ async function copyTable() {
     ].join("\t"));
   });
 
-  lines.push([
-    "Nights out:",
-    el("nightsOut").value || "4",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    ""
-  ].join("\t"));
+  lines.push(["Nights out:", el("nightsOut").value || "4", "", "", "", "", "", "", ""].join("\t"));
 
   await navigator.clipboard.writeText(lines.join("\n"));
   alert("Table copied. You can paste it into Excel or Google Sheets.");
 }
 
 ["driver", "vehicleDefault", "nightsOut"].forEach(id => {
-  document.addEventListener("input", e => {
-    if (e.target && e.target.id === id) {
-      if (id === "vehicleDefault" && !el("vehicle").value) {
-        el("vehicle").value = el("vehicleDefault").value;
+  document.addEventListener("input", event => {
+    if (event.target && event.target.id === id) {
+      if (id === "vehicleDefault") {
+        el("vehicle").value = el("vehicleDefault").value || "GF20NXM";
       }
 
       saveSettings();
@@ -747,8 +916,10 @@ async function copyTable() {
   });
 });
 
+initPickers();
 loadSettings();
 loadRows();
 </script>
+
 </body>
 </html>
