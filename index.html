@@ -6,251 +6,324 @@
 <title>RMU Runsheet</title>
 
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 14px;
-    color: #111;
-  }
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 14px;
+  color: #111;
+  background: #fff;
+}
 
-  h1 {
-    margin: 0 0 10px;
-    font-size: 28px;
-  }
+h1 {
+  margin: 0 0 8px;
+  font-size: 30px;
+}
 
-  input, select, button {
-    font: inherit;
-    min-height: 46px;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-    width: 100%;
-  }
+h2 {
+  margin: 0 0 10px;
+  font-size: 20px;
+}
 
-  button {
-    background: #eee;
-    font-weight: bold;
-    cursor: pointer;
-  }
+input, select, button {
+  font: inherit;
+  min-height: 48px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  width: 100%;
+}
 
-  .primary {
-    background: #e7f2ff;
-    border-color: #8bb8e8;
-  }
+button {
+  cursor: pointer;
+  background: #eee;
+  font-weight: bold;
+  touch-action: manipulation;
+}
 
-  .danger {
-    background: #ffecec;
-    border-color: #e1a5a5;
-  }
+.primary {
+  background: #e8f2ff;
+  border-color: #8dbce8;
+}
 
-  .selected {
-    background: #d9f7df;
-    border-color: #63b96f;
-  }
+.danger {
+  background: #ffecec;
+  border-color: #e1a5a5;
+}
 
-  .top {
-    display: grid;
+.load-btn {
+  background: #eaf8ee;
+  border: 2px solid #6abb7a;
+}
+
+.tip-btn {
+  background: #fff1e6;
+  border: 2px solid #e2a167;
+}
+
+.fuel-btn {
+  background: #f3ecff;
+  border: 2px solid #9b7bd3;
+}
+
+.selected {
+  background: #d9f7df;
+  border-color: #63b96f;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.top {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.settings-panel {
+  max-width: 540px;
+  border: 1px solid #d8d8d8;
+  border-radius: 12px;
+  background: #fafafa;
+  padding: 0;
+}
+
+.settings-panel summary {
+  cursor: pointer;
+  font-weight: bold;
+  padding: 12px 14px;
+  list-style: none;
+}
+
+.settings-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.settings-panel summary::after {
+  content: " ▾";
+  float: right;
+}
+
+.settings-panel[open] summary::after {
+  content: " ▴";
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 8px;
+  max-width: 540px;
+  align-items: center;
+  padding: 0 14px 14px;
+}
+
+.meta label {
+  font-weight: bold;
+}
+
+.top-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  max-width: 800px;
+}
+
+.card {
+  border: 1px solid #d8d8d8;
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 14px;
+  background: white;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.big-action {
+  min-height: 130px;
+  font-size: 26px;
+}
+
+.wizard {
+  border: 2px solid #8dbce8;
+  background: #fbfdff;
+}
+
+.wizard-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.step-label {
+  color: #666;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.question {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 9px;
+}
+
+.choice-grid button {
+  min-height: 62px;
+  font-size: 18px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 9px;
+}
+
+.form-grid label {
+  font-size: 12px;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.wizard-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.summary-box {
+  background: #f6f6f6;
+  border: 1px solid #d8d8d8;
+  border-radius: 12px;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.summary-box strong {
+  display: inline-block;
+  min-width: 92px;
+}
+
+.status {
+  color: #666;
+  font-size: 13px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 12px;
+}
+
+th {
+  background: #f6f6f6;
+  text-align: left;
+  border-bottom: 1px solid #999;
+  padding: 8px 6px;
+}
+
+td {
+  border-bottom: 1px solid #d8d8d8;
+  padding: 8px 6px;
+  word-wrap: break-word;
+  vertical-align: middle;
+}
+
+.open-row {
+  background: #fffceb;
+}
+
+.open-row td:first-child::after {
+  content: " open";
+  color: #9a6a00;
+  font-size: 10px;
+}
+
+.nights-row td {
+  font-weight: bold;
+  border-top: 1px solid #999;
+}
+
+.small-btn {
+  min-height: 30px;
+  padding: 4px;
+  font-size: 11px;
+}
+
+.print-title {
+  display: none;
+}
+
+@media(max-width:760px) {
+  .dashboard {
     grid-template-columns: 1fr;
-    gap: 8px;
-    margin-bottom: 12px;
   }
 
-  .meta {
-    display: grid;
-    grid-template-columns: 90px 1fr;
-    gap: 8px;
-    align-items: center;
-    max-width: 520px;
+  .big-action {
+    min-height: 95px;
   }
 
-  .meta label {
-    font-weight: bold;
-  }
-
-  .card {
-    border: 1px solid #ddd;
-    border-radius: 14px;
-    padding: 12px;
-    margin-bottom: 14px;
-  }
-
+  .choice-grid,
   .form-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-
-  label {
-    font-size: 12px;
-    font-weight: bold;
-    display: block;
-    margin-bottom: 4px;
-  }
-
-  .locations {
-    display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  .location-box {
-    border: 1px solid #ddd;
-    border-radius: 14px;
-    padding: 10px;
-    background: #fafafa;
-  }
-
-  .location-box h3 {
-    margin: 0 0 8px;
-  }
-
-  .button-stack {
-    display: grid;
-    gap: 8px;
-  }
-
-  .selection {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin: 10px 0;
-  }
-
-  .selection div {
-    border: 1px dashed #aaa;
-    border-radius: 12px;
-    padding: 10px;
-    font-weight: bold;
-  }
-
-  .selection span {
-    display: block;
-    font-size: 12px;
-    color: #666;
-    font-weight: normal;
-  }
-
-  .picker-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
-
-  .picker-row.three {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-
-  .actions {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
-    margin-top: 12px;
   }
 
   .top-actions {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin: 10px 0;
+    grid-template-columns: 1fr 1fr;
   }
 
   table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-    font-size: 12px;
-  }
-
-  th {
-    background: #f3f3f3;
-    text-align: left;
-    border-bottom: 1px solid #999;
-    padding: 8px 6px;
-  }
-
-  td {
-    border-bottom: 1px solid #ddd;
-    padding: 8px 6px;
-    word-wrap: break-word;
-  }
-
-  .open-row {
-    background: #fffceb;
-  }
-
-  .open-row td:first-child::after {
-    content: " open";
-    color: #9a6a00;
     font-size: 10px;
   }
+}
 
-  .nights-row td {
-    font-weight: bold;
-    border-top: 1px solid #999;
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 8mm;
   }
 
-  .small-btn {
-    min-height: 30px;
-    padding: 4px;
-    font-size: 11px;
+  .no-print {
+    display: none !important;
   }
 
   .print-title {
-    display: none;
+    display: block;
+    margin-bottom: 8px;
   }
 
-  @media (max-width: 760px) {
-    .form-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .actions {
-      grid-template-columns: 1fr;
-    }
-
-    .top-actions {
-      grid-template-columns: 1fr 1fr;
-    }
-
-    table {
-      font-size: 10px;
-    }
+  table {
+    font-size: 9px;
   }
 
-  @media print {
-    @page {
-      size: A4 landscape;
-      margin: 8mm;
-    }
-
-    .no-print {
-      display: none !important;
-    }
-
-    .print-title {
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    table {
-      font-size: 9px;
-    }
-
-    th, td {
-      border-left: none !important;
-      border-right: none !important;
-      padding: 5px;
-    }
-
-    .open-row {
-      background: white;
-    }
-
-    .open-row td:first-child::after {
-      content: "";
-    }
+  th, td {
+    border-left: none !important;
+    border-right: none !important;
+    padding: 5px;
   }
+
+  .open-row {
+    background: white;
+  }
+
+  .open-row td:first-child::after {
+    content: "";
+  }
+}
 </style>
 </head>
 
@@ -259,16 +332,19 @@
 <div class="top">
   <h1>RMU Runsheet</h1>
 
-  <div class="meta">
-    <label>Driver:</label>
-    <input id="driver" value="Mark Davenport">
+  <details class="settings-panel no-print">
+    <summary>Driver / vehicle / nights out</summary>
+    <div class="meta">
+      <label>Driver:</label>
+      <input id="driver" value="Mark Davenport">
 
-    <label>Vehicle:</label>
-    <input id="vehicleDefault" value="GF20NXM">
+      <label>Vehicle:</label>
+      <input id="vehicleDefault" value="GF20NXM">
 
-    <label>Nights out:</label>
-    <select id="nightsOut"></select>
-  </div>
+      <label>Nights out:</label>
+      <select id="nightsOut"></select>
+    </div>
+  </details>
 
   <div class="top-actions no-print">
     <button class="primary" onclick="printPdf()">Export / Save PDF</button>
@@ -278,99 +354,34 @@
   </div>
 </div>
 
-<div class="card no-print">
-  <div class="form-grid">
+<div id="dashboardCard" class="card no-print">
+  <h2>What are you doing?</h2>
+  <p class="status">Choose one action. The app will then ask only the questions needed.</p>
+
+  <div class="dashboard">
+    <button class="big-action load-btn" onclick="startWizard('load')">LOAD</button>
+    <button class="big-action tip-btn" onclick="startWizard('tip')">TIP</button>
+    <button class="big-action fuel-btn" onclick="startWizard('fuel')">FUEL</button>
+  </div>
+</div>
+
+<div id="wizardCard" class="card wizard no-print hidden">
+  <div class="wizard-header">
     <div>
-      <label>Date picker</label>
-      <input id="datePicker" type="date" onchange="updateDateDayFromPicker()">
+      <div id="stepLabel" class="step-label">Step</div>
+      <div id="question" class="question">Question</div>
     </div>
 
-    <div>
-      <label>Date / Day on sheet</label>
-      <input id="dateDay" placeholder="Mon 27/04/26">
-    </div>
-
-    <div>
-      <label>Product</label>
-      <select id="product">
-        <option value="">Select</option>
-        <option>Loose</option>
-        <option>Bails</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Vehicle</label>
-      <input id="vehicle" value="GF20NXM">
-    </div>
+    <button style="max-width:110px" onclick="cancelWizard()">Cancel</button>
   </div>
 
-  <div class="locations">
-    <div class="location-box">
-      <h3>Loaded at</h3>
-      <div class="button-stack">
-        <button id="load-SUEZ" onclick="chooseLoad('SUEZ','Loose')">SUEZ</button>
-        <button id="load-Whites" onclick="chooseLoad('Whites','Loose')">Whites</button>
-        <button id="load-Rainham" onclick="chooseLoad('Rainham','Loose')">Rainham</button>
-        <button id="load-Crayford" onclick="chooseLoad('Crayford','Bails')">Crayford</button>
-      </div>
-    </div>
+  <div id="stepContent"></div>
 
-    <div class="location-box">
-      <h3>Tipped at</h3>
-      <div class="button-stack">
-        <button id="tip-Camberley" onclick="chooseTip('Camberley','Loose')">Camberley</button>
-        <button id="tip-Oakleaf" onclick="chooseTip('Oakleaf','Loose')">Oakleaf</button>
-        <button id="tip-Sheerness" onclick="chooseTip('Sheerness','Bails')">Sheerness</button>
-        <button id="tip-Crayford" onclick="chooseTip('Crayford','Loose')">Crayford</button>
-      </div>
-    </div>
-  </div>
+  <div id="summaryBox" class="summary-box hidden"></div>
 
-  <div class="selection">
-    <div><span>Selected loading event</span><p id="loadDisplay">None selected</p></div>
-    <div><span>Selected tipping event</span><p id="tipDisplay">None selected</p></div>
-  </div>
-
-  <div class="form-grid">
-    <div>
-      <label>Load ticket number</label>
-      <input id="loadTicket" placeholder="RMP-SW8992">
-    </div>
-
-    <div>
-      <label>Tipped ticket number</label>
-      <input id="tipTicket" placeholder="116480">
-    </div>
-
-    <div>
-      <label>Litres / diesel</label>
-      <div class="picker-row">
-        <select id="litresHundreds"></select>
-        <select id="litresOnes"></select>
-      </div>
-    </div>
-
-    <div>
-      <label>Mileage</label>
-      <div class="picker-row three">
-        <select id="mileageType">
-          <option value="">Mileage</option>
-          <option value="Start: ">Start</option>
-          <option value="Finish: ">Finish</option>
-        </select>
-        <select id="mileageThousands"></select>
-        <select id="mileageRemainder"></select>
-      </div>
-    </div>
-  </div>
-
-  <div class="actions">
-    <button class="primary" onclick="submitLoadingEvent()">Submit loading event</button>
-    <button class="primary" onclick="submitTippingEvent()">Submit tipping event</button>
-    <button onclick="startNewBlankRow()">Start new row</button>
-    <button onclick="clearCurrentEntry()">Clear entry</button>
-    <button onclick="newDay()">Next day</button>
+  <div class="wizard-actions">
+    <button id="backButton" onclick="previousStep()">Back</button>
+    <button id="nextButton" class="primary" onclick="nextStep()">Next</button>
   </div>
 </div>
 
@@ -395,51 +406,44 @@
       <th class="no-print">Edit</th>
     </tr>
   </thead>
+
   <tbody id="tbody"></tbody>
 </table>
 
 <script>
-const rowsKey = "rmuRunsheetRowsEventEntryV1";
-const settingsKey = "rmuRunsheetSettingsEventEntryV1";
+const rowsKey = "rmuRunsheetLinearRowsV1";
+const settingsKey = "rmuRunsheetLinearSettingsV1";
 
 let rows = [];
-let selectedLoad = "";
-let selectedTip = "";
+let wizardMode = "";
+let wizardStep = 0;
+let draft = {};
+
+const loadLocations = ["SUEZ", "Whites", "Rainham", "Crayford"];
+const tipLocations = ["Camberley", "Oakleaf", "Sheerness", "Crayford"];
 
 function el(id) {
   return document.getElementById(id);
 }
 
-function pad(num) {
-  return String(num).padStart(2, "0");
+function pad(n) {
+  return String(n).padStart(2, "0");
 }
 
-function addOptions(id, start, end, blank, padded) {
+function addOptions(id, start, end) {
   const box = el(id);
   box.innerHTML = "";
 
-  if (blank) {
-    const opt = document.createElement("option");
-    opt.value = "";
-    opt.textContent = "-";
-    box.appendChild(opt);
-  }
-
   for (let i = start; i <= end; i++) {
-    const opt = document.createElement("option");
-    opt.value = String(i);
-    opt.textContent = padded ? pad(i) : String(i);
-    box.appendChild(opt);
+    const option = document.createElement("option");
+    option.value = String(i);
+    option.textContent = String(i);
+    box.appendChild(option);
   }
 }
 
 function initPickers() {
-  addOptions("nightsOut", 0, 7, false, false);
-  addOptions("litresHundreds", 0, 9, true, false);
-  addOptions("litresOnes", 0, 99, true, true);
-  addOptions("mileageThousands", 450, 499, true, false);
-  addOptions("mileageRemainder", 0, 999, true, true);
-
+  addOptions("nightsOut", 0, 7);
   el("nightsOut").value = "4";
 }
 
@@ -456,7 +460,6 @@ function loadSettings() {
 
   el("driver").value = settings.driver || "Mark Davenport";
   el("vehicleDefault").value = settings.vehicleDefault || "GF20NXM";
-  el("vehicle").value = settings.vehicleDefault || "GF20NXM";
   el("nightsOut").value = settings.nightsOut || "4";
 }
 
@@ -479,74 +482,428 @@ function formatDateForSheet(value) {
   return `${days[date.getDay()]} ${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${String(date.getFullYear()).slice(-2)}`;
 }
 
-function updateDateDayFromPicker() {
-  const formatted = formatDateForSheet(el("datePicker").value);
-  if (formatted) el("dateDay").value = formatted;
+function todayDateValue() {
+  const now = new Date();
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
 }
 
-function clearSelectedButtons(prefix) {
-  document.querySelectorAll(`[id^="${prefix}-"]`).forEach(btn => btn.classList.remove("selected"));
+function nowTimeValue() {
+  const now = new Date();
+  return `${pad(now.getHours())}:${pad(now.getMinutes())}`;
 }
 
-function chooseLoad(location, product) {
-  selectedLoad = location;
-  el("loadDisplay").textContent = location;
+function startWizard(mode) {
+  wizardMode = mode;
+  wizardStep = 0;
 
-  clearSelectedButtons("load");
-  el(`load-${location}`).classList.add("selected");
-
-  if (!el("product").value) el("product").value = product || "";
-
-  el("loadTicket").focus();
-}
-
-function chooseTip(location, product) {
-  selectedTip = location;
-  el("tipDisplay").textContent = location;
-
-  clearSelectedButtons("tip");
-  el(`tip-${location}`).classList.add("selected");
-
-  if (!el("product").value) el("product").value = product || "";
-
-  el("tipTicket").focus();
-}
-
-function formatDiesel() {
-  const hundreds = el("litresHundreds").value;
-  const ones = el("litresOnes").value;
-
-  if (hundreds === "" && ones === "") return "";
-
-  const litres = Number(hundreds || 0) * 100 + Number(ones || 0);
-  return litres ? `${litres}L` : "";
-}
-
-function formatMileage() {
-  const thousands = el("mileageThousands").value;
-  const remainder = el("mileageRemainder").value;
-  const type = el("mileageType").value || "";
-
-  if (thousands === "" && remainder === "") return "";
-
-  const mileage = Number(thousands || 0) * 1000 + Number(remainder || 0);
-  return mileage ? `${type}${mileage} km` : "";
-}
-
-function extras() {
-  return {
-    product: el("product").value.trim(),
-    vehicle: el("vehicle").value.trim() || el("vehicleDefault").value || "GF20NXM",
-    diesel: formatDiesel(),
-    mileage: formatMileage()
+  draft = {
+    dateValue: todayDateValue(),
+    dateDay: formatDateForSheet(todayDateValue()),
+    time: nowTimeValue(),
+    location: "",
+    ticket: "",
+    product: "",
+    diesel: "",
+    mileage: "",
+    mileageType: "",
+    vehicle: el("vehicleDefault").value || "GF20NXM"
   };
+
+  el("dashboardCard").classList.add("hidden");
+  el("wizardCard").classList.remove("hidden");
+
+  renderStep();
 }
 
-function applyExtras(row, extra) {
-  if (extra.product) row.product = extra.product;
-  if (extra.vehicle) row.vehicle = extra.vehicle;
-  if (extra.diesel) row.diesel = extra.diesel;
-  if (extra.mileage) row.mileage = extra.mileage;
+function cancelWizard() {
+  wizardMode = "";
+  wizardStep = 0;
+  draft = {};
+
+  el("wizardCard").classList.add("hidden");
+  el("dashboardCard").classList.remove("hidden");
+}
+
+function stepCount() {
+  return wizardMode === "fuel" ? 4 : 6;
+}
+
+function renderStep() {
+  el("summaryBox").classList.add("hidden");
+
+  el("backButton").style.visibility = wizardStep === 0 ? "hidden" : "visible";
+  el("nextButton").textContent = wizardStep === stepCount() - 1 ? "Submit" : "Next";
+
+  el("stepLabel").textContent =
+    `${wizardMode === "load" ? "Loading event" : wizardMode === "tip" ? "Tipping event" : "Fuel event"} — Step ${wizardStep + 1} of ${stepCount()}`;
+
+  if (wizardMode === "fuel") {
+    if (wizardStep === 0) renderDateStep();
+    if (wizardStep === 1) renderFuelLitresStep();
+    if (wizardStep === 2) renderFuelMileageStep();
+    if (wizardStep === 3) renderFuelConfirmStep();
+    return;
+  }
+
+  if (wizardStep === 0) renderDateStep();
+  if (wizardStep === 1) renderTimeStep();
+  if (wizardStep === 2) renderLocationStep();
+  if (wizardStep === 3) renderTicketStep();
+  if (wizardStep === 4) renderMaterialStep();
+  if (wizardStep === 5) renderExtrasStep();
+}
+
+function setContent(html) {
+  el("stepContent").innerHTML = html;
+}
+
+function renderDateStep() {
+  el("question").textContent = "What date is it?";
+
+  setContent(`
+    <div class="form-grid">
+      <div>
+        <label>Date</label>
+        <input
+          id="wizDate"
+          type="date"
+          value="${draft.dateValue}"
+          onchange="draft.dateValue=this.value; draft.dateDay=formatDateForSheet(this.value); document.getElementById('wizDateShown').value=draft.dateDay"
+        >
+      </div>
+
+      <div>
+        <label>Date / day on sheet</label>
+        <input
+          id="wizDateShown"
+          value="${draft.dateDay}"
+          oninput="draft.dateDay=this.value"
+        >
+      </div>
+    </div>
+  `);
+}
+
+function renderTimeStep() {
+  el("question").textContent = "What time is the event?";
+
+  setContent(`
+    <div class="form-grid">
+      <div>
+        <label>Time</label>
+        <input
+          id="wizTime"
+          type="time"
+          value="${draft.time}"
+          oninput="draft.time=this.value"
+        >
+      </div>
+
+      <div>
+        <label>Shortcut</label>
+        <button onclick="draft.time=nowTimeValue(); renderTimeStep()">Use current time</button>
+      </div>
+    </div>
+
+    <p class="status">This time appears next to the location, for example: SUEZ 08:31.</p>
+  `);
+}
+
+function renderLocationStep() {
+  const locations = wizardMode === "load" ? loadLocations : tipLocations;
+
+  el("question").textContent = wizardMode === "load" ? "Where did you load?" : "Where did you tip?";
+
+  const buttons = locations.map(location => {
+    const selected = draft.location === location ? "selected" : "";
+
+    return `
+      <button
+        class="${selected}"
+        onclick="draft.location='${location}'; autoProduct('${location}'); renderLocationStep()"
+      >
+        ${location}
+      </button>
+    `;
+  }).join("");
+
+  setContent(`<div class="choice-grid">${buttons}</div>`);
+}
+
+function autoProduct(location) {
+  if (draft.product) return;
+
+  if (location === "Crayford" && wizardMode === "load") {
+    draft.product = "Bails";
+  } else if (location === "Sheerness") {
+    draft.product = "Bails";
+  } else {
+    draft.product = "Loose";
+  }
+}
+
+function renderTicketStep() {
+  el("question").textContent = wizardMode === "load"
+    ? "What is the load ticket number?"
+    : "What is the tip ticket number?";
+
+  setContent(`
+    <div class="form-grid">
+      <div>
+        <label>${wizardMode === "load" ? "Load ticket" : "Tip ticket"}</label>
+        <input
+          id="wizTicket"
+          value="${draft.ticket}"
+          placeholder="${wizardMode === "load" ? "RMP-SW8992" : "116480"}"
+          oninput="draft.ticket=this.value"
+        >
+      </div>
+    </div>
+  `);
+}
+
+function renderMaterialStep() {
+  el("question").textContent = "What material type?";
+
+  setContent(`
+    <div class="choice-grid">
+      <button
+        class="${draft.product === "Loose" ? "selected" : ""}"
+        onclick="draft.product='Loose'; renderMaterialStep()"
+      >
+        Loose
+      </button>
+
+      <button
+        class="${draft.product === "Bails" ? "selected" : ""}"
+        onclick="draft.product='Bails'; renderMaterialStep()"
+      >
+        Bails
+      </button>
+    </div>
+  `);
+}
+
+function renderExtrasStep() {
+  el("question").textContent = "Any diesel or mileage?";
+
+  setContent(`
+    <div class="form-grid">
+      <div>
+        <label>Diesel litres</label>
+        <input
+          id="wizDiesel"
+          type="number"
+          inputmode="numeric"
+          value="${draft.diesel}"
+          placeholder="286"
+          oninput="draft.diesel=this.value"
+        >
+      </div>
+
+      <div>
+        <label>Mileage type</label>
+        <select id="wizMileageType" onchange="draft.mileageType=this.value">
+          <option value="" ${draft.mileageType === "" ? "selected" : ""}>Mileage</option>
+          <option value="Start: " ${draft.mileageType === "Start: " ? "selected" : ""}>Start</option>
+          <option value="Finish: " ${draft.mileageType === "Finish: " ? "selected" : ""}>Finish</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Mileage</label>
+        <input
+          id="wizMileage"
+          type="number"
+          inputmode="numeric"
+          value="${draft.mileage}"
+          placeholder="461444"
+          oninput="draft.mileage=this.value"
+        >
+      </div>
+
+      <div>
+        <label>Vehicle</label>
+        <input
+          id="wizVehicle"
+          value="${draft.vehicle}"
+          oninput="draft.vehicle=this.value"
+        >
+      </div>
+    </div>
+  `);
+
+  renderSummary();
+}
+
+function renderFuelLitresStep() {
+  el("question").textContent = "How many litres?";
+
+  setContent(`
+    <div class="form-grid">
+      <div>
+        <label>Diesel litres</label>
+        <input
+          id="wizDiesel"
+          type="number"
+          inputmode="numeric"
+          value="${draft.diesel}"
+          placeholder="286"
+          oninput="draft.diesel=this.value"
+        >
+      </div>
+    </div>
+  `);
+}
+
+function renderFuelMileageStep() {
+  el("question").textContent = "What mileage?";
+
+  setContent(`
+    <div class="form-grid">
+      <div>
+        <label>Mileage type</label>
+        <select id="wizMileageType" onchange="draft.mileageType=this.value">
+          <option value="" ${draft.mileageType === "" ? "selected" : ""}>Mileage</option>
+          <option value="Start: " ${draft.mileageType === "Start: " ? "selected" : ""}>Start</option>
+          <option value="Finish: " ${draft.mileageType === "Finish: " ? "selected" : ""}>Finish</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Mileage</label>
+        <input
+          id="wizMileage"
+          type="number"
+          inputmode="numeric"
+          value="${draft.mileage}"
+          placeholder="461444"
+          oninput="draft.mileage=this.value"
+        >
+      </div>
+
+      <div>
+        <label>Vehicle</label>
+        <input
+          id="wizVehicle"
+          value="${draft.vehicle}"
+          oninput="draft.vehicle=this.value"
+        >
+      </div>
+    </div>
+  `);
+}
+
+function renderFuelConfirmStep() {
+  el("question").textContent = "Submit fuel entry?";
+
+  setContent(`
+    <p class="status">This will add a fuel-only row with diesel and mileage filled in.</p>
+  `);
+
+  renderSummary();
+}
+
+function renderSummary() {
+  const diesel = draft.diesel ? `${draft.diesel}L` : "";
+  const mileage = draft.mileage ? `${draft.mileageType || ""}${draft.mileage} km` : "";
+  const location = draft.location && draft.time ? `${draft.location} ${draft.time}` : draft.location;
+
+  el("summaryBox").innerHTML = `
+    <strong>Date:</strong> ${draft.dateDay || ""}<br>
+    <strong>Event:</strong> ${wizardMode === "load" ? "Load" : wizardMode === "tip" ? "Tip" : "Fuel"}<br>
+    <strong>Location:</strong> ${location || ""}<br>
+    <strong>Ticket:</strong> ${draft.ticket || ""}<br>
+    <strong>Product:</strong> ${draft.product || ""}<br>
+    <strong>Diesel:</strong> ${diesel}<br>
+    <strong>Mileage:</strong> ${mileage}
+  `;
+
+  el("summaryBox").classList.remove("hidden");
+}
+
+function previousStep() {
+  if (wizardStep > 0) {
+    wizardStep--;
+    renderStep();
+  }
+}
+
+function nextStep() {
+  saveCurrentStepValues();
+
+  if (!validateStep()) return;
+
+  if (wizardStep < stepCount() - 1) {
+    wizardStep++;
+    renderStep();
+  } else {
+    submitWizard();
+  }
+}
+
+function saveCurrentStepValues() {
+  if (wizardStep === 0 && el("wizDate")) {
+    draft.dateValue = el("wizDate").value;
+    draft.dateDay = el("wizDateShown").value;
+  }
+
+  if (wizardStep === 1 && el("wizTime")) {
+    draft.time = el("wizTime").value;
+  }
+
+  if (wizardStep === 3 && el("wizTicket")) {
+    draft.ticket = el("wizTicket").value.trim();
+  }
+
+  if ((wizardMode === "fuel" && (wizardStep === 1 || wizardStep === 2)) || wizardStep === 5) {
+    if (el("wizDiesel")) draft.diesel = el("wizDiesel").value.trim();
+    if (el("wizMileage")) draft.mileage = el("wizMileage").value.trim();
+    if (el("wizMileageType")) draft.mileageType = el("wizMileageType").value;
+    if (el("wizVehicle")) draft.vehicle = el("wizVehicle").value.trim();
+  }
+}
+
+function validateStep() {
+  if (wizardStep === 0 && !draft.dateDay) {
+    alert("Please choose a date.");
+    return false;
+  }
+
+  if (wizardMode === "fuel") {
+    if (wizardStep === 1 && !draft.diesel) {
+      alert("Please enter litres.");
+      return false;
+    }
+
+    if (wizardStep === 2 && !draft.mileage) {
+      alert("Please enter mileage.");
+      return false;
+    }
+
+    return true;
+  }
+
+  if (wizardStep === 1 && !draft.time) {
+    alert("Please choose a time.");
+    return false;
+  }
+
+  if (wizardStep === 2 && !draft.location) {
+    alert("Please choose a location.");
+    return false;
+  }
+
+  if (wizardStep === 4 && !draft.product) {
+    alert("Please choose Loose or Bails.");
+    return false;
+  }
+
+  return true;
+}
+
+function formatEventLocation() {
+  return draft.location && draft.time ? `${draft.location} ${draft.time}` : draft.location;
 }
 
 function latestOpenRowIndex() {
@@ -557,102 +914,64 @@ function latestOpenRowIndex() {
   return -1;
 }
 
-function submitLoadingEvent() {
-  const dateDay = el("dateDay").value.trim();
+function submitWizard() {
+  const diesel = draft.diesel ? `${draft.diesel}L` : "";
+  const mileage = draft.mileage ? `${draft.mileageType || ""}${draft.mileage} km` : "";
+  const vehicle = draft.vehicle || el("vehicleDefault").value || "GF20NXM";
 
-  if (!dateDay) {
-    alert("Please choose a date first.");
-    return;
-  }
-
-  if (!selectedLoad) {
-    alert("Please press a loaded location on the left first.");
-    return;
-  }
-
-  const extra = extras();
-
-  rows.push({
-    dateDay,
-    loadedAt: selectedLoad,
-    loadTicket: el("loadTicket").value.trim(),
-    tippedAt: "",
-    tipTicket: "",
-    product: extra.product,
-    vehicle: extra.vehicle,
-    diesel: extra.diesel,
-    mileage: extra.mileage
-  });
-
-  saveRows();
-  render();
-  clearCurrentEntry(true);
-}
-
-function submitTippingEvent() {
-  const dateDay = el("dateDay").value.trim();
-
-  if (!dateDay) {
-    alert("Please choose a date first.");
-    return;
-  }
-
-  if (!selectedTip) {
-    alert("Please press a tipped location on the right first.");
-    return;
-  }
-
-  const extra = extras();
-  const openIndex = latestOpenRowIndex();
-
-  if (openIndex >= 0) {
-    rows[openIndex].tippedAt = selectedTip;
-    rows[openIndex].tipTicket = el("tipTicket").value.trim();
-    applyExtras(rows[openIndex], extra);
-  } else {
+  if (wizardMode === "fuel") {
     rows.push({
-      dateDay,
+      dateDay: draft.dateDay,
       loadedAt: "",
       loadTicket: "",
-      tippedAt: selectedTip,
-      tipTicket: el("tipTicket").value.trim(),
-      product: extra.product,
-      vehicle: extra.vehicle,
-      diesel: extra.diesel,
-      mileage: extra.mileage
+      tippedAt: "",
+      tipTicket: "",
+      product: "Fuel",
+      vehicle: vehicle,
+      diesel: diesel,
+      mileage: mileage
     });
+  } else if (wizardMode === "load") {
+    rows.push({
+      dateDay: draft.dateDay,
+      loadedAt: formatEventLocation(),
+      loadTicket: draft.ticket,
+      tippedAt: "",
+      tipTicket: "",
+      product: draft.product,
+      vehicle: vehicle,
+      diesel: diesel,
+      mileage: mileage
+    });
+  } else {
+    const openIndex = latestOpenRowIndex();
+
+    if (openIndex >= 0) {
+      rows[openIndex].tippedAt = formatEventLocation();
+      rows[openIndex].tipTicket = draft.ticket;
+
+      if (draft.product) rows[openIndex].product = draft.product;
+      if (vehicle) rows[openIndex].vehicle = vehicle;
+      if (diesel) rows[openIndex].diesel = diesel;
+      if (mileage) rows[openIndex].mileage = mileage;
+    } else {
+      rows.push({
+        dateDay: draft.dateDay,
+        loadedAt: "",
+        loadTicket: "",
+        tippedAt: formatEventLocation(),
+        tipTicket: draft.ticket,
+        product: draft.product,
+        vehicle: vehicle,
+        diesel: diesel,
+        mileage: mileage
+      });
+    }
   }
 
   saveRows();
   render();
-  clearCurrentEntry(true);
-}
-
-function startNewBlankRow() {
-  const dateDay = el("dateDay").value.trim();
-
-  if (!dateDay) {
-    alert("Please choose a date first.");
-    return;
-  }
-
-  const extra = extras();
-
-  rows.push({
-    dateDay,
-    loadedAt: "",
-    loadTicket: "",
-    tippedAt: "",
-    tipTicket: "",
-    product: extra.product,
-    vehicle: extra.vehicle,
-    diesel: extra.diesel,
-    mileage: extra.mileage
-  });
-
-  saveRows();
-  render();
-  clearCurrentEntry(true);
+  cancelWizard();
 }
 
 function render() {
@@ -664,7 +983,9 @@ function render() {
   rows.forEach((row, index) => {
     const tr = document.createElement("tr");
 
-    if (row.loadedAt && !row.tippedAt) tr.className = "open-row";
+    if (row.loadedAt && !row.tippedAt) {
+      tr.className = "open-row";
+    }
 
     const dayShown = row.dateDay === previousDay ? "" : row.dateDay;
     previousDay = row.dateDay;
@@ -679,7 +1000,7 @@ function render() {
       row.vehicle,
       row.diesel,
       row.mileage
-    ].forEach((value) => {
+    ].forEach(value => {
       const td = document.createElement("td");
       td.textContent = value || "";
       tr.appendChild(td);
@@ -690,92 +1011,45 @@ function render() {
     edit.innerHTML = `
       <button class="small-btn" onclick="moveUp(${index})">↑</button>
       <button class="small-btn" onclick="moveDown(${index})">↓</button>
-      <button class="small-btn" onclick="editRow(${index})">Edit</button>
-      <button class="small-btn danger" onclick="deleteRow(${index})">Delete</button>
+      <button class="small-btn" onclick="deleteRow(${index})">Delete</button>
     `;
-    tr.appendChild(edit);
 
+    tr.appendChild(edit);
     tbody.appendChild(tr);
   });
 
-  const night = document.createElement("tr");
-  night.className = "nights-row";
+  const nightRow = document.createElement("tr");
+  nightRow.className = "nights-row";
 
-  ["Nights out:", el("nightsOut").value || "4", "", "", "", "", "", "", ""].forEach(value => {
+  [
+    "Nights out:",
+    el("nightsOut").value || "4",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+  ].forEach(value => {
     const td = document.createElement("td");
     td.textContent = value;
-    night.appendChild(td);
+    nightRow.appendChild(td);
   });
 
   const blank = document.createElement("td");
   blank.className = "no-print";
-  night.appendChild(blank);
+  nightRow.appendChild(blank);
 
-  tbody.appendChild(night);
+  tbody.appendChild(nightRow);
 
   el("printDriver").textContent = el("driver").value || "Mark Davenport";
   el("printVehicle").textContent = el("vehicleDefault").value || "GF20NXM";
 }
 
-function editRow(index) {
-  const row = rows[index];
-
-  el("dateDay").value = row.dateDay || "";
-  selectedLoad = row.loadedAt || "";
-  selectedTip = row.tippedAt || "";
-
-  el("loadDisplay").textContent = selectedLoad || "None selected";
-  el("tipDisplay").textContent = selectedTip || "None selected";
-  el("loadTicket").value = row.loadTicket || "";
-  el("tipTicket").value = row.tipTicket || "";
-  el("product").value = row.product || "";
-  el("vehicle").value = row.vehicle || el("vehicleDefault").value || "GF20NXM";
-
-  clearSelectedButtons("load");
-  clearSelectedButtons("tip");
-
-  if (selectedLoad && el(`load-${selectedLoad}`)) el(`load-${selectedLoad}`).classList.add("selected");
-  if (selectedTip && el(`tip-${selectedTip}`)) el(`tip-${selectedTip}`).classList.add("selected");
-
-  rows.splice(index, 1);
-  saveRows();
-  render();
-}
-
-function clearCurrentEntry(keepDate = false) {
-  selectedLoad = "";
-  selectedTip = "";
-
-  el("loadDisplay").textContent = "None selected";
-  el("tipDisplay").textContent = "None selected";
-
-  clearSelectedButtons("load");
-  clearSelectedButtons("tip");
-
-  el("loadTicket").value = "";
-  el("tipTicket").value = "";
-  el("product").value = "";
-  el("vehicle").value = el("vehicleDefault").value || "GF20NXM";
-
-  el("litresHundreds").value = "";
-  el("litresOnes").value = "";
-  el("mileageType").value = "";
-  el("mileageThousands").value = "";
-  el("mileageRemainder").value = "";
-
-  if (!keepDate) {
-    el("datePicker").value = "";
-    el("dateDay").value = "";
-  }
-}
-
-function newDay() {
-  clearCurrentEntry(false);
-  el("datePicker").focus();
-}
-
 function deleteRow(index) {
   if (!confirm("Delete this row?")) return;
+
   rows.splice(index, 1);
   saveRows();
   render();
@@ -783,6 +1057,7 @@ function deleteRow(index) {
 
 function moveUp(index) {
   if (index <= 0) return;
+
   [rows[index - 1], rows[index]] = [rows[index], rows[index - 1]];
   saveRows();
   render();
@@ -790,6 +1065,7 @@ function moveUp(index) {
 
 function moveDown(index) {
   if (index >= rows.length - 1) return;
+
   [rows[index + 1], rows[index]] = [rows[index], rows[index + 1]];
   saveRows();
   render();
@@ -797,6 +1073,7 @@ function moveDown(index) {
 
 function clearAll() {
   if (!confirm("Clear all rows?")) return;
+
   rows = [];
   saveRows();
   render();
@@ -851,9 +1128,22 @@ function downloadCsv() {
     ].map(csvEscape).join(","));
   });
 
-  csv.push(["Nights out:", el("nightsOut").value || "4", "", "", "", "", "", "", ""].map(csvEscape).join(","));
+  csv.push([
+    "Nights out:",
+    el("nightsOut").value || "4",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+  ].map(csvEscape).join(","));
 
-  const blob = new Blob([csv.join("\n")], { type: "text/csv;charset=utf-8" });
+  const blob = new Blob([csv.join("\n")], {
+    type: "text/csv;charset=utf-8"
+  });
+
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
 
@@ -897,7 +1187,17 @@ async function copyTable() {
     ].join("\t"));
   });
 
-  lines.push(["Nights out:", el("nightsOut").value || "4", "", "", "", "", "", "", ""].join("\t"));
+  lines.push([
+    "Nights out:",
+    el("nightsOut").value || "4",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+  ].join("\t"));
 
   await navigator.clipboard.writeText(lines.join("\n"));
   alert("Table copied. You can paste it into Excel or Google Sheets.");
@@ -906,10 +1206,6 @@ async function copyTable() {
 ["driver", "vehicleDefault", "nightsOut"].forEach(id => {
   document.addEventListener("input", event => {
     if (event.target && event.target.id === id) {
-      if (id === "vehicleDefault") {
-        el("vehicle").value = el("vehicleDefault").value || "GF20NXM";
-      }
-
       saveSettings();
       render();
     }
