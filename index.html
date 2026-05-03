@@ -6,323 +6,67 @@
 <title>RMU Runsheet</title>
 
 <style>
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  margin: 14px;
-  color: #111;
-  background: #fff;
+body{font-family:Arial,Helvetica,sans-serif;margin:14px;color:#111;background:#fff}
+h1{margin:0 0 8px;font-size:30px}
+h2{margin:0 0 10px;font-size:20px}
+input,select,button{font:inherit;min-height:48px;padding:10px;border-radius:12px;border:1px solid #ccc;box-sizing:border-box;width:100%}
+button{cursor:pointer;background:#eee;font-weight:bold;touch-action:manipulation}
+.primary{background:#e8f2ff;border-color:#8dbce8}
+.danger{background:#ffecec;border-color:#e1a5a5}
+.load-btn{background:#eaf8ee;border:2px solid #6abb7a}
+.tip-btn{background:#fff1e6;border:2px solid #e2a167}
+.fuel-btn{background:#f3ecff;border:2px solid #9b7bd3}
+.selected{background:#d9f7df;border-color:#63b96f}
+.hidden{display:none!important}
+.top{display:grid;gap:10px;margin-bottom:12px}
+.settings-panel{max-width:540px;border:1px solid #d8d8d8;border-radius:12px;background:#fafafa;padding:0}
+.settings-panel summary{cursor:pointer;font-weight:bold;padding:12px 14px;list-style:none}
+.settings-panel summary::-webkit-details-marker{display:none}
+.settings-panel summary::after{content:" ▾";float:right}
+.settings-panel[open] summary::after{content:" ▴"}
+.meta{display:grid;grid-template-columns:90px 1fr;gap:8px;max-width:540px;align-items:center;padding:0 14px 14px}
+.meta label{font-weight:bold}
+.top-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:800px}
+.card{border:1px solid #d8d8d8;border-radius:16px;padding:14px;margin-bottom:14px;background:#fff}
+.dashboard{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.big-action{min-height:130px;font-size:26px}
+.wizard{border:2px solid #8dbce8;background:#fbfdff}
+.wizard-header{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:12px}
+.step-label{color:#666;font-size:13px;font-weight:bold}
+.question{font-size:22px;font-weight:bold;margin-bottom:10px}
+.choice-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.choice-grid button{min-height:62px;font-size:18px}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.form-grid label{font-size:12px;font-weight:bold;display:block;margin-bottom:4px}
+.wizard-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.summary-box{background:#f6f6f6;border:1px solid #d8d8d8;border-radius:12px;padding:10px;margin-top:10px;font-size:14px}
+.summary-box strong{display:inline-block;min-width:92px}
+.status{color:#666;font-size:13px}
+table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:12px}
+th{background:#f6f6f6;text-align:left;border-bottom:1px solid #999;padding:8px 6px}
+td{border-bottom:1px solid #d8d8d8;padding:8px 6px;word-wrap:break-word;vertical-align:middle}
+.open-row{background:#fffceb}
+.open-row td:first-child::after{content:" open";color:#9a6a00;font-size:10px}
+.nights-row td{font-weight:bold;border-top:1px solid #999}
+.small-btn{min-height:30px;padding:4px;font-size:11px}
+.print-title{display:none}
+
+@media(max-width:760px){
+  .dashboard{grid-template-columns:1fr}
+  .big-action{min-height:95px}
+  .choice-grid,.form-grid{grid-template-columns:1fr 1fr}
+  .top-actions{grid-template-columns:1fr 1fr}
+  table{font-size:10px}
 }
 
-h1 {
-  margin: 0 0 8px;
-  font-size: 30px;
-}
-
-h2 {
-  margin: 0 0 10px;
-  font-size: 20px;
-}
-
-input, select, button {
-  font: inherit;
-  min-height: 48px;
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  width: 100%;
-}
-
-button {
-  cursor: pointer;
-  background: #eee;
-  font-weight: bold;
-  touch-action: manipulation;
-}
-
-.primary {
-  background: #e8f2ff;
-  border-color: #8dbce8;
-}
-
-.danger {
-  background: #ffecec;
-  border-color: #e1a5a5;
-}
-
-.load-btn {
-  background: #eaf8ee;
-  border: 2px solid #6abb7a;
-}
-
-.tip-btn {
-  background: #fff1e6;
-  border: 2px solid #e2a167;
-}
-
-.fuel-btn {
-  background: #f3ecff;
-  border: 2px solid #9b7bd3;
-}
-
-.selected {
-  background: #d9f7df;
-  border-color: #63b96f;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.top {
-  display: grid;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.settings-panel {
-  max-width: 540px;
-  border: 1px solid #d8d8d8;
-  border-radius: 12px;
-  background: #fafafa;
-  padding: 0;
-}
-
-.settings-panel summary {
-  cursor: pointer;
-  font-weight: bold;
-  padding: 12px 14px;
-  list-style: none;
-}
-
-.settings-panel summary::-webkit-details-marker {
-  display: none;
-}
-
-.settings-panel summary::after {
-  content: " ▾";
-  float: right;
-}
-
-.settings-panel[open] summary::after {
-  content: " ▴";
-}
-
-.meta {
-  display: grid;
-  grid-template-columns: 90px 1fr;
-  gap: 8px;
-  max-width: 540px;
-  align-items: center;
-  padding: 0 14px 14px;
-}
-
-.meta label {
-  font-weight: bold;
-}
-
-.top-actions {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  max-width: 800px;
-}
-
-.card {
-  border: 1px solid #d8d8d8;
-  border-radius: 16px;
-  padding: 14px;
-  margin-bottom: 14px;
-  background: white;
-}
-
-.dashboard {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 12px;
-}
-
-.big-action {
-  min-height: 130px;
-  font-size: 26px;
-}
-
-.wizard {
-  border: 2px solid #8dbce8;
-  background: #fbfdff;
-}
-
-.wizard-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.step-label {
-  color: #666;
-  font-size: 13px;
-  font-weight: bold;
-}
-
-.question {
-  font-size: 22px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.choice-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 9px;
-}
-
-.choice-grid button {
-  min-height: 62px;
-  font-size: 18px;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 9px;
-}
-
-.form-grid label {
-  font-size: 12px;
-  font-weight: bold;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.wizard-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.summary-box {
-  background: #f6f6f6;
-  border: 1px solid #d8d8d8;
-  border-radius: 12px;
-  padding: 10px;
-  margin-top: 10px;
-  font-size: 14px;
-}
-
-.summary-box strong {
-  display: inline-block;
-  min-width: 92px;
-}
-
-.status {
-  color: #666;
-  font-size: 13px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-  font-size: 12px;
-}
-
-th {
-  background: #f6f6f6;
-  text-align: left;
-  border-bottom: 1px solid #999;
-  padding: 8px 6px;
-}
-
-td {
-  border-bottom: 1px solid #d8d8d8;
-  padding: 8px 6px;
-  word-wrap: break-word;
-  vertical-align: middle;
-}
-
-.open-row {
-  background: #fffceb;
-}
-
-.open-row td:first-child::after {
-  content: " open";
-  color: #9a6a00;
-  font-size: 10px;
-}
-
-.nights-row td {
-  font-weight: bold;
-  border-top: 1px solid #999;
-}
-
-.small-btn {
-  min-height: 30px;
-  padding: 4px;
-  font-size: 11px;
-}
-
-.print-title {
-  display: none;
-}
-
-@media(max-width:760px) {
-  .dashboard {
-    grid-template-columns: 1fr;
-  }
-
-  .big-action {
-    min-height: 95px;
-  }
-
-  .choice-grid,
-  .form-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .top-actions {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  table {
-    font-size: 10px;
-  }
-}
-
-@media print {
-  @page {
-    size: A4 landscape;
-    margin: 8mm;
-  }
-
-  .no-print {
-    display: none !important;
-  }
-
-  .print-title {
-    display: block;
-    margin-bottom: 8px;
-  }
-
-  table {
-    font-size: 9px;
-  }
-
-  th, td {
-    border-left: none !important;
-    border-right: none !important;
-    padding: 5px;
-  }
-
-  .open-row {
-    background: white;
-  }
-
-  .open-row td:first-child::after {
-    content: "";
-  }
+@media print{
+  @page{size:A4 landscape;margin:8mm}
+  .no-print{display:none!important}
+  .print-title{display:block;margin-bottom:8px}
+  table{font-size:9px}
+  th,td{border-left:none!important;border-right:none!important;padding:5px}
+  .open-row{background:white}
+  .open-row td:first-child::after{content:""}
 }
 </style>
 </head>
@@ -371,12 +115,10 @@ td {
       <div id="stepLabel" class="step-label">Step</div>
       <div id="question" class="question">Question</div>
     </div>
-
     <button style="max-width:110px" onclick="cancelWizard()">Cancel</button>
   </div>
 
   <div id="stepContent"></div>
-
   <div id="summaryBox" class="summary-box hidden"></div>
 
   <div class="wizard-actions">
@@ -406,21 +148,20 @@ td {
       <th class="no-print">Edit</th>
     </tr>
   </thead>
-
   <tbody id="tbody"></tbody>
 </table>
 
 <script>
-const rowsKey = "rmuRunsheetLinearRowsV1";
-const settingsKey = "rmuRunsheetLinearSettingsV1";
+const rowsKey = "rmuRunsheetLinearRowsV2";
+const settingsKey = "rmuRunsheetLinearSettingsV2";
 
 let rows = [];
 let wizardMode = "";
 let wizardStep = 0;
 let draft = {};
 
-const loadLocations = ["SUEZ", "Whites", "Rainham", "Crayford"];
-const tipLocations = ["Camberley", "Oakleaf", "Sheerness", "Crayford"];
+const loadLocations = ["Camberley", "Crayford", "Whites", "Rainham", "SUEZ"];
+const tipLocations = ["Whites", "Rainham", "Canterbury", "Sheerness", "Oakleaf", "Blank"];
 
 function el(id) {
   return document.getElementById(id);
@@ -511,7 +252,6 @@ function startWizard(mode) {
 
   el("dashboardCard").classList.add("hidden");
   el("wizardCard").classList.remove("hidden");
-
   renderStep();
 }
 
@@ -525,7 +265,8 @@ function cancelWizard() {
 }
 
 function stepCount() {
-  return wizardMode === "fuel" ? 4 : 6;
+  if (wizardMode === "fuel") return 4;
+  return 5;
 }
 
 function renderStep() {
@@ -550,7 +291,6 @@ function renderStep() {
   if (wizardStep === 2) renderLocationStep();
   if (wizardStep === 3) renderTicketStep();
   if (wizardStep === 4) renderMaterialStep();
-  if (wizardStep === 5) renderExtrasStep();
 }
 
 function setContent(html) {
@@ -611,7 +351,6 @@ function renderTimeStep() {
 
 function renderLocationStep() {
   const locations = wizardMode === "load" ? loadLocations : tipLocations;
-
   el("question").textContent = wizardMode === "load" ? "Where did you load?" : "Where did you tip?";
 
   const buttons = locations.map(location => {
@@ -631,11 +370,11 @@ function renderLocationStep() {
 }
 
 function autoProduct(location) {
-  if (draft.product) return;
+  if (draft.product || location === "Blank") return;
 
   if (location === "Crayford" && wizardMode === "load") {
     draft.product = "Bails";
-  } else if (location === "Sheerness") {
+  } else if (location === "Sheerness" || location === "Canterbury") {
     draft.product = "Bails";
   } else {
     draft.product = "Loose";
@@ -643,6 +382,13 @@ function autoProduct(location) {
 }
 
 function renderTicketStep() {
+  if (wizardMode === "tip" && draft.location === "Blank") {
+    draft.ticket = "";
+    wizardStep++;
+    renderStep();
+    return;
+  }
+
   el("question").textContent = wizardMode === "load"
     ? "What is the load ticket number?"
     : "What is the tip ticket number?";
@@ -680,56 +426,6 @@ function renderMaterialStep() {
       >
         Bails
       </button>
-    </div>
-  `);
-}
-
-function renderExtrasStep() {
-  el("question").textContent = "Any diesel or mileage?";
-
-  setContent(`
-    <div class="form-grid">
-      <div>
-        <label>Diesel litres</label>
-        <input
-          id="wizDiesel"
-          type="number"
-          inputmode="numeric"
-          value="${draft.diesel}"
-          placeholder="286"
-          oninput="draft.diesel=this.value"
-        >
-      </div>
-
-      <div>
-        <label>Mileage type</label>
-        <select id="wizMileageType" onchange="draft.mileageType=this.value">
-          <option value="" ${draft.mileageType === "" ? "selected" : ""}>Mileage</option>
-          <option value="Start: " ${draft.mileageType === "Start: " ? "selected" : ""}>Start</option>
-          <option value="Finish: " ${draft.mileageType === "Finish: " ? "selected" : ""}>Finish</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Mileage</label>
-        <input
-          id="wizMileage"
-          type="number"
-          inputmode="numeric"
-          value="${draft.mileage}"
-          placeholder="461444"
-          oninput="draft.mileage=this.value"
-        >
-      </div>
-
-      <div>
-        <label>Vehicle</label>
-        <input
-          id="wizVehicle"
-          value="${draft.vehicle}"
-          oninput="draft.vehicle=this.value"
-        >
-      </div>
     </div>
   `);
 
@@ -807,7 +503,11 @@ function renderFuelConfirmStep() {
 function renderSummary() {
   const diesel = draft.diesel ? `${draft.diesel}L` : "";
   const mileage = draft.mileage ? `${draft.mileageType || ""}${draft.mileage} km` : "";
-  const location = draft.location && draft.time ? `${draft.location} ${draft.time}` : draft.location;
+  const location = draft.location === "Blank"
+    ? ""
+    : draft.location && draft.time
+      ? `${draft.location} ${draft.time}`
+      : draft.location;
 
   el("summaryBox").innerHTML = `
     <strong>Date:</strong> ${draft.dateDay || ""}<br>
@@ -856,7 +556,7 @@ function saveCurrentStepValues() {
     draft.ticket = el("wizTicket").value.trim();
   }
 
-  if ((wizardMode === "fuel" && (wizardStep === 1 || wizardStep === 2)) || wizardStep === 5) {
+  if (wizardMode === "fuel" && (wizardStep === 1 || wizardStep === 2)) {
     if (el("wizDiesel")) draft.diesel = el("wizDiesel").value.trim();
     if (el("wizMileage")) draft.mileage = el("wizMileage").value.trim();
     if (el("wizMileageType")) draft.mileageType = el("wizMileageType").value;
@@ -903,6 +603,7 @@ function validateStep() {
 }
 
 function formatEventLocation() {
+  if (draft.location === "Blank") return "";
   return draft.location && draft.time ? `${draft.location} ${draft.time}` : draft.location;
 }
 
@@ -940,31 +641,29 @@ function submitWizard() {
       tipTicket: "",
       product: draft.product,
       vehicle: vehicle,
-      diesel: diesel,
-      mileage: mileage
+      diesel: "",
+      mileage: ""
     });
   } else {
     const openIndex = latestOpenRowIndex();
 
     if (openIndex >= 0) {
       rows[openIndex].tippedAt = formatEventLocation();
-      rows[openIndex].tipTicket = draft.ticket;
+      rows[openIndex].tipTicket = draft.location === "Blank" ? "" : draft.ticket;
 
       if (draft.product) rows[openIndex].product = draft.product;
       if (vehicle) rows[openIndex].vehicle = vehicle;
-      if (diesel) rows[openIndex].diesel = diesel;
-      if (mileage) rows[openIndex].mileage = mileage;
     } else {
       rows.push({
         dateDay: draft.dateDay,
         loadedAt: "",
         loadTicket: "",
         tippedAt: formatEventLocation(),
-        tipTicket: draft.ticket,
+        tipTicket: draft.location === "Blank" ? "" : draft.ticket,
         product: draft.product,
         vehicle: vehicle,
-        diesel: diesel,
-        mileage: mileage
+        diesel: "",
+        mileage: ""
       });
     }
   }
