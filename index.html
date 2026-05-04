@@ -382,6 +382,7 @@ tbody td{
   tr.data-row td:empty{display:none}
 
   tr.data-row td::before{
+    content:attr(data-label);
     color:var(--gold2);
     font-size:11px;
     font-weight:900;
@@ -389,17 +390,6 @@ tbody td{
     letter-spacing:.06em;
     line-height:1.35;
   }
-
-  tr.data-row td:nth-child(1)::before{content:"Date / Day"}
-  tr.data-row td:nth-child(2)::before{content:"Loaded at"}
-  tr.data-row td:nth-child(3)::before{content:"Load ticket"}
-  tr.data-row td:nth-child(4)::before{content:"Tipped at"}
-  tr.data-row td:nth-child(5)::before{content:"Tip ticket"}
-  tr.data-row td:nth-child(6)::before{content:"Product"}
-  tr.data-row td:nth-child(7)::before{content:"Vehicle"}
-  tr.data-row td:nth-child(8)::before{content:"Diesel"}
-  tr.data-row td:nth-child(9)::before{content:"Mileage"}
-  tr.data-row td:nth-child(10)::before{content:"Edit"}
 
   .nights-row{display:block}
 
@@ -421,12 +411,12 @@ tbody td{
     margin:5mm;
   }
 
-  body{
+  html,body{
     background:#fff!important;
     color:#111!important;
     padding:0!important;
     margin:0!important;
-    font-family:Arial,Helvetica,sans-serif;
+    font-family:Arial,Helvetica,sans-serif!important;
   }
 
   .no-print,
@@ -442,48 +432,48 @@ tbody td{
     color:#111!important;
     margin:0 0 4px 0!important;
     font-size:9px!important;
-    line-height:1.2!important;
+    line-height:1.15!important;
   }
 
   .table-wrap{
+    display:block!important;
+    width:100%!important;
     border:none!important;
     box-shadow:none!important;
     background:#fff!important;
     overflow:visible!important;
     border-radius:0!important;
+    padding:0!important;
+    margin:0!important;
   }
 
   table{
+    display:table!important;
     width:100%!important;
     min-width:0!important;
     table-layout:fixed!important;
     border-collapse:collapse!important;
     border-spacing:0!important;
-    font-size:7.5px!important;
-    line-height:1.15!important;
+    font-size:7.2px!important;
+    line-height:1.1!important;
     color:#111!important;
   }
 
-  thead{
-    display:table-header-group!important;
-  }
+  col.col-date{width:9%!important}
+  col.col-loaded{width:15%!important}
+  col.col-load-ticket{width:12%!important}
+  col.col-tipped{width:15%!important}
+  col.col-tip-ticket{width:12%!important}
+  col.col-product{width:8%!important}
+  col.col-vehicle{width:9%!important}
+  col.col-diesel{width:8%!important}
+  col.col-mileage{width:12%!important}
+  col.col-edit{display:none!important;width:0!important}
 
-  thead th{
-    background:#f3f3f3!important;
-    color:#111!important;
-    font-size:7px!important;
-    font-weight:bold!important;
-    text-transform:none!important;
-    letter-spacing:0!important;
-    padding:3px 3px!important;
-    border-bottom:1px solid #aaa!important;
-    text-align:left!important;
-  }
+  thead{display:table-header-group!important}
+  tbody{display:table-row-group!important}
 
-  tbody{
-    display:table-row-group!important;
-  }
-
+  thead tr,
   tbody tr,
   tbody tr.data-row,
   tbody tr.nights-row{
@@ -495,24 +485,49 @@ tbody td{
     page-break-inside:avoid!important;
   }
 
+  thead th,
   tbody td{
     display:table-cell!important;
     color:#111!important;
-    font-size:7.5px!important;
     padding:3px 3px!important;
-    border-bottom:0.5px solid #ddd!important;
     border-left:none!important;
     border-right:none!important;
+    border-bottom:.5px solid #ddd!important;
     vertical-align:top!important;
-    word-break:break-word!important;
+    word-break:normal!important;
+    overflow-wrap:anywhere!important;
+    white-space:normal!important;
   }
+
+  thead th{
+    background:#f3f3f3!important;
+    font-size:7px!important;
+    font-weight:bold!important;
+    text-transform:none!important;
+    letter-spacing:0!important;
+    border-bottom:1px solid #aaa!important;
+    text-align:left!important;
+  }
+
+  tbody td{font-size:7.2px!important}
 
   tbody td::before{
     content:none!important;
     display:none!important;
   }
 
+  th.no-print,
+  td.no-print,
+  th:nth-child(10),
+  td:nth-child(10){
+    display:none!important;
+    width:0!important;
+    padding:0!important;
+    border:0!important;
+  }
+
   .nights-row td{
+    display:table-cell!important;
     font-size:8px!important;
     font-weight:bold!important;
     color:#111!important;
@@ -520,21 +535,6 @@ tbody td{
     border-top:1px solid #aaa!important;
     padding:4px 3px!important;
   }
-
-  th.no-print,
-  td.no-print{
-    display:none!important;
-  }
-
-  th:nth-child(1),td:nth-child(1){width:9%!important}
-  th:nth-child(2),td:nth-child(2){width:15%!important}
-  th:nth-child(3),td:nth-child(3){width:12%!important}
-  th:nth-child(4),td:nth-child(4){width:15%!important}
-  th:nth-child(5),td:nth-child(5){width:12%!important}
-  th:nth-child(6),td:nth-child(6){width:8%!important}
-  th:nth-child(7),td:nth-child(7){width:9%!important}
-  th:nth-child(8),td:nth-child(8){width:8%!important}
-  th:nth-child(9),td:nth-child(9){width:12%!important}
 }
 </style>
 </head>
@@ -607,6 +607,19 @@ tbody td{
 
 <div class="table-wrap">
   <table>
+    <colgroup>
+      <col class="col-date">
+      <col class="col-loaded">
+      <col class="col-load-ticket">
+      <col class="col-tipped">
+      <col class="col-tip-ticket">
+      <col class="col-product">
+      <col class="col-vehicle">
+      <col class="col-diesel">
+      <col class="col-mileage">
+      <col class="col-edit">
+    </colgroup>
+
     <thead>
       <tr>
         <th>Date / Day</th>
@@ -621,13 +634,14 @@ tbody td{
         <th class="no-print">Edit</th>
       </tr>
     </thead>
+
     <tbody id="tbody"></tbody>
   </table>
 </div>
 
 <script>
-const rowsKey="rmuRunsheetLinearRowsV4";
-const settingsKey="rmuRunsheetLinearSettingsV4";
+const rowsKey="rmuRunsheetLinearRowsV5";
+const settingsKey="rmuRunsheetLinearSettingsV5";
 
 let rows=[];
 let wizardMode="";
@@ -636,6 +650,18 @@ let draft={};
 
 const loadLocations=["Camberley","Crayford","Whites","Rainham","SUEZ"];
 const tipLocations=["Whites","Rainham","Canterbury","Sheerness","Oakleaf","Crayford","Blank"];
+
+const labels=[
+  "Date / Day",
+  "Loaded at",
+  "Load ticket",
+  "Tipped at",
+  "Tip ticket",
+  "Product",
+  "Vehicle",
+  "Diesel",
+  "Mileage"
+];
 
 function el(id){return document.getElementById(id)}
 function pad(n){return String(n).padStart(2,"0")}
@@ -1138,6 +1164,13 @@ function displayRows(){
   return [...headerMileageRows(),...rows];
 }
 
+function makeCell(value,label){
+  const td=document.createElement("td");
+  td.textContent=value||"";
+  td.setAttribute("data-label",label);
+  return td;
+}
+
 function render(){
   const tbody=el("tbody");
   tbody.innerHTML="";
@@ -1168,14 +1201,13 @@ function render(){
       row.mileage
     ];
 
-    values.forEach(value=>{
-      const td=document.createElement("td");
-      td.textContent=value||"";
-      tr.appendChild(td);
+    values.forEach((value,i)=>{
+      tr.appendChild(makeCell(value,labels[i]));
     });
 
     const editTd=document.createElement("td");
     editTd.className="no-print";
+    editTd.setAttribute("data-label","Edit");
 
     if(index>=headerCount){
       const real=index-headerCount;
