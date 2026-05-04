@@ -460,7 +460,7 @@ tbody td{
 
 <div id="dashboardCard" class="card no-print">
   <h2>What are you doing?</h2>
-  <p class="status">Choose one action. The app will then ask only the questions needed.</p>
+  <p class="status">Choose one action. Loads and tips only pair when they happen on the same day.</p>
 
   <div class="dashboard">
     <button class="big-action load-btn" onclick="startWizard('load')">LOAD</button>
@@ -532,8 +532,8 @@ tbody td{
 <div id="mobileCards" class="mobile-cards no-print"></div>
 
 <script>
-const rowsKey="rmuRunsheetLinearRowsV6";
-const settingsKey="rmuRunsheetLinearSettingsV6";
+const rowsKey="rmuRunsheetLinearRowsV7";
+const settingsKey="rmuRunsheetLinearSettingsV7";
 
 let rows=[];
 let wizardMode="";
@@ -958,9 +958,17 @@ function nextStep(){
   }
 }
 
-function latestOpenRowIndex(){
+/*
+  IMPORTANT FIX:
+  This only returns an open load on the SAME date as the tip.
+  A Monday load will not be paired with a Tuesday tip.
+  A Tuesday tip will therefore stay under Tuesday unless there is already a Tuesday load waiting.
+*/
+function latestOpenRowIndexForSameDay(dateDay){
   for(let i=rows.length-1;i>=0;i--){
-    if(rows[i].loadedAt&&!rows[i].tippedAt)return i;
+    if(rows[i].dateDay===dateDay && rows[i].loadedAt && !rows[i].tippedAt){
+      return i;
+    }
   }
 
   return -1;
@@ -998,10 +1006,9 @@ function submitWizard(){
       mileage:""
     });
   }else{
-    const openIndex=latestOpenRowIndex();
+    const openIndex=latestOpenRowIndexForSameDay(draft.dateDay);
 
     if(openIndex>=0){
-      rows[openIndex].dateDay=draft.dateDay;
       rows[openIndex].tippedAt=formatEventLocation();
       rows[openIndex].tipTicket=draft.location==="Blank"?"":draft.ticket;
 
