@@ -4,77 +4,541 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>RMU Runsheet</title>
+
 <style>
-:root{--bg:#020617;--panel:rgba(9,18,40,.86);--line:rgba(255,255,255,.12);--line2:rgba(255,255,255,.22);--text:#f8fafc;--muted:#9aa7bd;--gold:#f59e0b;--gold2:#fbbf24;--shadow:0 24px 70px rgba(0,0,0,.38)}
+:root{
+  --bg:#020617;
+  --panel:rgba(9,18,40,.86);
+  --line:rgba(255,255,255,.12);
+  --line2:rgba(255,255,255,.22);
+  --text:#f8fafc;
+  --muted:#9aa7bd;
+  --gold:#f59e0b;
+  --gold2:#fbbf24;
+  --shadow:0 24px 70px rgba(0,0,0,.38);
+}
+
 *{box-sizing:border-box}
-body{margin:0;padding:18px;min-height:100vh;font-family:Inter,Arial,Helvetica,sans-serif;color:var(--text);background:radial-gradient(circle at 10% 0%,rgba(245,158,11,.18),transparent 30%),radial-gradient(circle at 92% 8%,rgba(124,58,237,.18),transparent 25%),linear-gradient(135deg,#020617 0%,#0f172a 52%,#111827 100%)}
+
+body{
+  margin:0;
+  padding:18px;
+  min-height:100vh;
+  font-family:Inter,Arial,Helvetica,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 10% 0%,rgba(245,158,11,.18),transparent 30%),
+    radial-gradient(circle at 92% 8%,rgba(124,58,237,.18),transparent 25%),
+    linear-gradient(135deg,#020617 0%,#0f172a 52%,#111827 100%);
+}
+
 h1{margin:0;font-size:36px;letter-spacing:-.04em;line-height:1}
 h2{margin:0 0 8px;font-size:22px;letter-spacing:-.02em}
 p{margin:0}
-input,select,button{width:100%;min-height:50px;border-radius:14px;border:1px solid var(--line);font:inherit;padding:11px 12px}
-input,select{background:rgba(2,6,23,.58);color:var(--text);outline:none}
+
+input,select,button{
+  width:100%;
+  min-height:50px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  font:inherit;
+  padding:11px 12px;
+}
+
+input,select{
+  background:rgba(2,6,23,.58);
+  color:var(--text);
+  outline:none;
+}
+
 input::placeholder{color:#71819b}
-input:focus,select:focus{border-color:rgba(245,158,11,.75);box-shadow:0 0 0 4px rgba(245,158,11,.14)}
-button{cursor:pointer;font-weight:800;color:var(--text);background:rgba(255,255,255,.06);transition:transform .08s ease,filter .16s ease,border-color .16s ease}
+
+input:focus,select:focus{
+  border-color:rgba(245,158,11,.75);
+  box-shadow:0 0 0 4px rgba(245,158,11,.14);
+}
+
+button{
+  cursor:pointer;
+  font-weight:800;
+  color:var(--text);
+  background:rgba(255,255,255,.06);
+  transition:transform .08s ease,filter .16s ease,border-color .16s ease;
+}
+
 button:hover{filter:brightness(1.06);border-color:var(--line2)}
 button:active{transform:scale(.985)}
-.primary{background:linear-gradient(135deg,#d97706,#f59e0b,#fbbf24);color:#111827;border:none}
-.danger{background:linear-gradient(135deg,#8b1e2d,#ef4444);border-color:rgba(239,68,68,.35)}
-.load-btn{background:linear-gradient(135deg,#1d6c3d,#53c96b);border-color:rgba(83,201,107,.45)}
-.tip-btn{background:linear-gradient(135deg,#b34a1a,#f6a34c);border-color:rgba(246,163,76,.45)}
-.fuel-btn{background:linear-gradient(135deg,#5f2ed0,#a78bfa);border-color:rgba(167,139,250,.45)}
-.selected{background:linear-gradient(135deg,#d97706,#fbbf24);color:#111827;border-color:rgba(251,191,36,.8);box-shadow:0 10px 24px rgba(245,158,11,.22)}
-.hidden{display:none!important}
-.top{display:grid;gap:12px;margin-bottom:16px}
-.subtitle{color:var(--muted);font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-top:3px}
-.panel,.card{background:linear-gradient(180deg,rgba(15,23,42,.88),rgba(8,18,44,.82));border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);backdrop-filter:blur(14px);overflow:hidden}
-details.panel{max-width:720px}
-details.panel summary{list-style:none;cursor:pointer;padding:16px;font-weight:900;color:#e7edf7;position:relative}
-details.panel summary::-webkit-details-marker{display:none}
-details.panel summary::after{content:"▾";position:absolute;right:16px;color:var(--gold2)}
-details.panel[open] summary::after{content:"▴"}
-.meta{display:grid;grid-template-columns:140px 1fr;gap:10px;padding:0 16px 16px;align-items:center}
-.meta label,.form-grid label{color:#d1d9e8;font-size:13px;font-weight:800}
-.export-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 16px 16px}
-.card{padding:18px;margin-bottom:16px}
-.status{color:var(--muted);font-size:14px;line-height:1.45}
-.dashboard{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:14px}
-.big-action{min-height:148px;border-radius:28px;font-size:30px;letter-spacing:.08em;box-shadow:0 14px 35px rgba(0,0,0,.28)}
-.wizard{border-color:rgba(245,158,11,.28)}
-.wizard-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
-.step-label{color:var(--gold2);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
-.question{font-size:24px;font-weight:900;letter-spacing:-.02em;margin-top:4px}
-.choice-grid,.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.choice-grid button{min-height:64px;font-size:18px}
-.form-grid label{display:block;margin-bottom:5px}
-.wizard-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.summary-box{background:rgba(2,6,23,.40);border:1px solid var(--line);border-radius:16px;padding:12px;margin-top:12px;color:#e8eef8;font-size:14px}
-.summary-box strong{display:inline-block;min-width:100px;color:var(--gold2)}
-.table-wrap{border:1px solid var(--line);border-radius:24px;background:linear-gradient(180deg,rgba(10,20,48,.84),rgba(6,14,35,.88));box-shadow:var(--shadow);overflow:auto}
-table{width:100%;min-width:980px;border-collapse:collapse;table-layout:fixed;font-size:12px}
-thead th{background:rgba(255,255,255,.05);color:#eaf0f9;text-align:left;padding:11px 8px;border-bottom:1px solid var(--line2);font-size:11px;text-transform:uppercase;letter-spacing:.05em}
-tbody td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.08);color:#f7fafc;vertical-align:middle;word-wrap:break-word}
-.data-row.open-row{background:rgba(245,158,11,.08)}
-.small-btn{min-height:32px;padding:4px 7px;font-size:11px;border-radius:10px}
-.nights-row td{font-weight:900;color:var(--gold2);border-top:1px solid var(--line2);padding:14px 10px;background:rgba(245,158,11,.06)}
-.print-title{display:none}
-@media(max-width:760px){
-body{padding:12px}h1{font-size:32px}.dashboard{grid-template-columns:1fr}.big-action{min-height:112px;font-size:28px}.meta{grid-template-columns:1fr}.export-actions,.form-grid,.choice-grid{grid-template-columns:1fr 1fr}.table-wrap{overflow:visible;border:none;background:transparent;box-shadow:none}table{min-width:0;width:100%;border-collapse:separate;border-spacing:0 14px}thead{display:none}tbody{display:block}
-tr.data-row{display:block;border:1px solid rgba(255,255,255,.10);border-radius:22px;background:linear-gradient(180deg,rgba(14,24,56,.95),rgba(7,17,42,.98));box-shadow:0 18px 38px rgba(0,0,0,.28);padding:12px 14px;position:relative;overflow:hidden}
-tr.data-row::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent)}
-tr.data-row.open-row{border-color:rgba(245,158,11,.28);box-shadow:0 18px 42px rgba(245,158,11,.10),0 14px 28px rgba(0,0,0,.24)}
-tr.data-row td{display:grid;grid-template-columns:112px 1fr;gap:10px;align-items:start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px}
-tr.data-row td:last-child{border-bottom:none}
-tr.data-row td:empty{display:none}
-tr.data-row td::before{color:var(--gold2);font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;line-height:1.35}
-tr.data-row td:nth-child(1)::before{content:"Date / Day"}tr.data-row td:nth-child(2)::before{content:"Loaded at"}tr.data-row td:nth-child(3)::before{content:"Load ticket"}tr.data-row td:nth-child(4)::before{content:"Tipped at"}tr.data-row td:nth-child(5)::before{content:"Tip ticket"}tr.data-row td:nth-child(6)::before{content:"Product"}tr.data-row td:nth-child(7)::before{content:"Vehicle"}tr.data-row td:nth-child(8)::before{content:"Diesel"}tr.data-row td:nth-child(9)::before{content:"Mileage"}tr.data-row td:nth-child(10)::before{content:"Edit"}
-.nights-row{display:block}.nights-row td{display:block;border:none!important;border-radius:18px;background:linear-gradient(135deg,rgba(245,158,11,.18),rgba(245,158,11,.08));color:#fff3d4;padding:14px 16px;box-shadow:0 12px 26px rgba(245,158,11,.10);font-size:15px}
+
+.primary{
+  background:linear-gradient(135deg,#d97706,#f59e0b,#fbbf24);
+  color:#111827;
+  border:none;
 }
+
+.danger{
+  background:linear-gradient(135deg,#8b1e2d,#ef4444);
+  border-color:rgba(239,68,68,.35);
+}
+
+.load-btn{
+  background:linear-gradient(135deg,#1d6c3d,#53c96b);
+  border-color:rgba(83,201,107,.45);
+}
+
+.tip-btn{
+  background:linear-gradient(135deg,#b34a1a,#f6a34c);
+  border-color:rgba(246,163,76,.45);
+}
+
+.fuel-btn{
+  background:linear-gradient(135deg,#5f2ed0,#a78bfa);
+  border-color:rgba(167,139,250,.45);
+}
+
+.selected{
+  background:linear-gradient(135deg,#d97706,#fbbf24);
+  color:#111827;
+  border-color:rgba(251,191,36,.8);
+  box-shadow:0 10px 24px rgba(245,158,11,.22);
+}
+
+.hidden{display:none!important}
+
+.top{
+  display:grid;
+  gap:12px;
+  margin-bottom:16px;
+}
+
+.subtitle{
+  color:var(--muted);
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  margin-top:3px;
+}
+
+.panel,.card{
+  background:linear-gradient(180deg,rgba(15,23,42,.88),rgba(8,18,44,.82));
+  border:1px solid var(--line);
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(14px);
+  overflow:hidden;
+}
+
+details.panel{max-width:720px}
+
+details.panel summary{
+  list-style:none;
+  cursor:pointer;
+  padding:16px;
+  font-weight:900;
+  color:#e7edf7;
+  position:relative;
+}
+
+details.panel summary::-webkit-details-marker{display:none}
+
+details.panel summary::after{
+  content:"▾";
+  position:absolute;
+  right:16px;
+  color:var(--gold2);
+}
+
+details.panel[open] summary::after{content:"▴"}
+
+.meta{
+  display:grid;
+  grid-template-columns:140px 1fr;
+  gap:10px;
+  padding:0 16px 16px;
+  align-items:center;
+}
+
+.meta label,.form-grid label{
+  color:#d1d9e8;
+  font-size:13px;
+  font-weight:800;
+}
+
+.export-actions{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  padding:0 16px 16px;
+}
+
+.card{
+  padding:18px;
+  margin-bottom:16px;
+}
+
+.status{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.45;
+}
+
+.dashboard{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:14px;
+  margin-top:14px;
+}
+
+.big-action{
+  min-height:148px;
+  border-radius:28px;
+  font-size:30px;
+  letter-spacing:.08em;
+  box-shadow:0 14px 35px rgba(0,0,0,.28);
+}
+
+.wizard{border-color:rgba(245,158,11,.28)}
+
+.wizard-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.step-label{
+  color:var(--gold2);
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+.question{
+  font-size:24px;
+  font-weight:900;
+  letter-spacing:-.02em;
+  margin-top:4px;
+}
+
+.choice-grid,.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.choice-grid button{
+  min-height:64px;
+  font-size:18px;
+}
+
+.form-grid label{
+  display:block;
+  margin-bottom:5px;
+}
+
+.wizard-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+
+.summary-box{
+  background:rgba(2,6,23,.40);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px;
+  margin-top:12px;
+  color:#e8eef8;
+  font-size:14px;
+}
+
+.summary-box strong{
+  display:inline-block;
+  min-width:100px;
+  color:var(--gold2);
+}
+
+.table-wrap{
+  border:1px solid var(--line);
+  border-radius:24px;
+  background:linear-gradient(180deg,rgba(10,20,48,.84),rgba(6,14,35,.88));
+  box-shadow:var(--shadow);
+  overflow:auto;
+}
+
+table{
+  width:100%;
+  min-width:980px;
+  border-collapse:collapse;
+  table-layout:fixed;
+  font-size:12px;
+}
+
+thead th{
+  background:rgba(255,255,255,.05);
+  color:#eaf0f9;
+  text-align:left;
+  padding:11px 8px;
+  border-bottom:1px solid var(--line2);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+
+tbody td{
+  padding:10px 8px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  color:#f7fafc;
+  vertical-align:middle;
+  word-wrap:break-word;
+}
+
+.data-row.open-row{background:rgba(245,158,11,.08)}
+
+.small-btn{
+  min-height:32px;
+  padding:4px 7px;
+  font-size:11px;
+  border-radius:10px;
+}
+
+.nights-row td{
+  font-weight:900;
+  color:var(--gold2);
+  border-top:1px solid var(--line2);
+  padding:14px 10px;
+  background:rgba(245,158,11,.06);
+}
+
+.print-title{display:none}
+
+@media(max-width:760px){
+  body{padding:12px}
+  h1{font-size:32px}
+
+  .dashboard{grid-template-columns:1fr}
+  .big-action{min-height:112px;font-size:28px}
+
+  .meta{grid-template-columns:1fr}
+  .export-actions,.form-grid,.choice-grid{grid-template-columns:1fr 1fr}
+
+  .table-wrap{
+    overflow:visible;
+    border:none;
+    background:transparent;
+    box-shadow:none;
+  }
+
+  table{
+    min-width:0;
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0 14px;
+  }
+
+  thead{display:none}
+  tbody{display:block}
+
+  tr.data-row{
+    display:block;
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:22px;
+    background:linear-gradient(180deg,rgba(14,24,56,.95),rgba(7,17,42,.98));
+    box-shadow:0 18px 38px rgba(0,0,0,.28);
+    padding:12px 14px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  tr.data-row::before{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    height:1px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+  }
+
+  tr.data-row.open-row{
+    border-color:rgba(245,158,11,.28);
+    box-shadow:0 18px 42px rgba(245,158,11,.10),0 14px 28px rgba(0,0,0,.24);
+  }
+
+  tr.data-row td{
+    display:grid;
+    grid-template-columns:112px 1fr;
+    gap:10px;
+    align-items:start;
+    padding:10px 0;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    font-size:14px;
+  }
+
+  tr.data-row td:last-child{border-bottom:none}
+  tr.data-row td:empty{display:none}
+
+  tr.data-row td::before{
+    color:var(--gold2);
+    font-size:11px;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    line-height:1.35;
+  }
+
+  tr.data-row td:nth-child(1)::before{content:"Date / Day"}
+  tr.data-row td:nth-child(2)::before{content:"Loaded at"}
+  tr.data-row td:nth-child(3)::before{content:"Load ticket"}
+  tr.data-row td:nth-child(4)::before{content:"Tipped at"}
+  tr.data-row td:nth-child(5)::before{content:"Tip ticket"}
+  tr.data-row td:nth-child(6)::before{content:"Product"}
+  tr.data-row td:nth-child(7)::before{content:"Vehicle"}
+  tr.data-row td:nth-child(8)::before{content:"Diesel"}
+  tr.data-row td:nth-child(9)::before{content:"Mileage"}
+  tr.data-row td:nth-child(10)::before{content:"Edit"}
+
+  .nights-row{display:block}
+
+  .nights-row td{
+    display:block;
+    border:none!important;
+    border-radius:18px;
+    background:linear-gradient(135deg,rgba(245,158,11,.18),rgba(245,158,11,.08));
+    color:#fff3d4;
+    padding:14px 16px;
+    box-shadow:0 12px 26px rgba(245,158,11,.10);
+    font-size:15px;
+  }
+}
+
 @media print{
-@page{size:A4 landscape;margin:8mm}body{background:#fff;color:#111;padding:0}.no-print{display:none!important}.print-title{display:block;color:#111;margin-bottom:8px}.table-wrap{border:none;box-shadow:none;background:#fff;overflow:visible}table{min-width:0;font-size:9px;border-collapse:collapse;color:#111}thead{display:table-header-group}tbody tr,tbody tr.data-row,tbody tr.nights-row{display:table-row;background:#fff!important;border:none!important;box-shadow:none!important;padding:0!important}tbody td,thead th{display:table-cell!important;color:#111!important;padding:5px;border-left:none!important;border-right:none!important}tbody td::before{content:none!important}
+  @page{
+    size:A4 landscape;
+    margin:5mm;
+  }
+
+  body{
+    background:#fff!important;
+    color:#111!important;
+    padding:0!important;
+    margin:0!important;
+    font-family:Arial,Helvetica,sans-serif;
+  }
+
+  .no-print,
+  .card,
+  details.panel,
+  #dashboardCard,
+  #wizardCard{
+    display:none!important;
+  }
+
+  .print-title{
+    display:block!important;
+    color:#111!important;
+    margin:0 0 4px 0!important;
+    font-size:9px!important;
+    line-height:1.2!important;
+  }
+
+  .table-wrap{
+    border:none!important;
+    box-shadow:none!important;
+    background:#fff!important;
+    overflow:visible!important;
+    border-radius:0!important;
+  }
+
+  table{
+    width:100%!important;
+    min-width:0!important;
+    table-layout:fixed!important;
+    border-collapse:collapse!important;
+    border-spacing:0!important;
+    font-size:7.5px!important;
+    line-height:1.15!important;
+    color:#111!important;
+  }
+
+  thead{
+    display:table-header-group!important;
+  }
+
+  thead th{
+    background:#f3f3f3!important;
+    color:#111!important;
+    font-size:7px!important;
+    font-weight:bold!important;
+    text-transform:none!important;
+    letter-spacing:0!important;
+    padding:3px 3px!important;
+    border-bottom:1px solid #aaa!important;
+    text-align:left!important;
+  }
+
+  tbody{
+    display:table-row-group!important;
+  }
+
+  tbody tr,
+  tbody tr.data-row,
+  tbody tr.nights-row{
+    display:table-row!important;
+    background:#fff!important;
+    border:none!important;
+    box-shadow:none!important;
+    padding:0!important;
+    page-break-inside:avoid!important;
+  }
+
+  tbody td{
+    display:table-cell!important;
+    color:#111!important;
+    font-size:7.5px!important;
+    padding:3px 3px!important;
+    border-bottom:0.5px solid #ddd!important;
+    border-left:none!important;
+    border-right:none!important;
+    vertical-align:top!important;
+    word-break:break-word!important;
+  }
+
+  tbody td::before{
+    content:none!important;
+    display:none!important;
+  }
+
+  .nights-row td{
+    font-size:8px!important;
+    font-weight:bold!important;
+    color:#111!important;
+    background:#fff!important;
+    border-top:1px solid #aaa!important;
+    padding:4px 3px!important;
+  }
+
+  th.no-print,
+  td.no-print{
+    display:none!important;
+  }
+
+  th:nth-child(1),td:nth-child(1){width:9%!important}
+  th:nth-child(2),td:nth-child(2){width:15%!important}
+  th:nth-child(3),td:nth-child(3){width:12%!important}
+  th:nth-child(4),td:nth-child(4){width:15%!important}
+  th:nth-child(5),td:nth-child(5){width:12%!important}
+  th:nth-child(6),td:nth-child(6){width:8%!important}
+  th:nth-child(7),td:nth-child(7){width:9%!important}
+  th:nth-child(8),td:nth-child(8){width:8%!important}
+  th:nth-child(9),td:nth-child(9){width:12%!important}
 }
 </style>
 </head>
+
 <body>
 <div class="top">
   <div>
@@ -107,6 +571,7 @@ tr.data-row td:nth-child(1)::before{content:"Date / Day"}tr.data-row td:nth-chil
 <div id="dashboardCard" class="card no-print">
   <h2>What are you doing?</h2>
   <p class="status">Choose one action. The app will then ask only the questions needed.</p>
+
   <div class="dashboard">
     <button class="big-action load-btn" onclick="startWizard('load')">LOAD</button>
     <button class="big-action tip-btn" onclick="startWizard('tip')">TIP</button>
@@ -122,8 +587,10 @@ tr.data-row td:nth-child(1)::before{content:"Date / Day"}tr.data-row td:nth-chil
     </div>
     <button style="max-width:110px" onclick="cancelWizard()">Cancel</button>
   </div>
+
   <div id="stepContent"></div>
   <div id="summaryBox" class="summary-box hidden"></div>
+
   <div class="wizard-actions">
     <button id="backButton" onclick="previousStep()">Back</button>
     <button id="nextButton" class="primary" onclick="nextStep()">Next</button>
@@ -142,7 +609,16 @@ tr.data-row td:nth-child(1)::before{content:"Date / Day"}tr.data-row td:nth-chil
   <table>
     <thead>
       <tr>
-        <th>Date / Day</th><th>Loaded at</th><th>Load ticket number</th><th>Tipped at</th><th>Tipped ticket number</th><th>Product</th><th>Vehicle</th><th>Diesel</th><th>Mileage</th><th class="no-print">Edit</th>
+        <th>Date / Day</th>
+        <th>Loaded at</th>
+        <th>Load ticket number</th>
+        <th>Tipped at</th>
+        <th>Tipped ticket number</th>
+        <th>Product</th>
+        <th>Vehicle</th>
+        <th>Diesel</th>
+        <th>Mileage</th>
+        <th class="no-print">Edit</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -150,9 +626,13 @@ tr.data-row td:nth-child(1)::before{content:"Date / Day"}tr.data-row td:nth-chil
 </div>
 
 <script>
-const rowsKey="rmuRunsheetLinearRowsV3";
-const settingsKey="rmuRunsheetLinearSettingsV3";
-let rows=[],wizardMode="",wizardStep=0,draft={};
+const rowsKey="rmuRunsheetLinearRowsV4";
+const settingsKey="rmuRunsheetLinearSettingsV4";
+
+let rows=[];
+let wizardMode="";
+let wizardStep=0;
+let draft={};
 
 const loadLocations=["Camberley","Crayford","Whites","Rainham","SUEZ"];
 const tipLocations=["Whites","Rainham","Canterbury","Sheerness","Oakleaf","Crayford","Blank"];
@@ -238,6 +718,7 @@ function formatEventLocation(){
 function startWizard(mode){
   wizardMode=mode;
   wizardStep=0;
+
   draft={
     dateValue:todayDateValue(),
     dateDay:formatDateForSheet(todayDateValue()),
@@ -251,6 +732,7 @@ function startWizard(mode){
     mileageType:"",
     vehicle:el("vehicleDefault").value||"GF20NXM"
   };
+
   el("dashboardCard").classList.add("hidden");
   el("wizardCard").classList.remove("hidden");
   renderStep();
@@ -276,7 +758,9 @@ function renderStep(){
   el("summaryBox").classList.add("hidden");
   el("backButton").style.visibility=wizardStep===0?"hidden":"visible";
   el("nextButton").textContent=wizardStep===stepCount()-1?"Submit":"Next";
-  el("stepLabel").textContent=`${wizardMode==="load"?"Loading event":wizardMode==="tip"?"Tipping event":"Fuel event"} — Step ${wizardStep+1} of ${stepCount()}`;
+
+  el("stepLabel").textContent=
+    `${wizardMode==="load"?"Loading event":wizardMode==="tip"?"Tipping event":"Fuel event"} — Step ${wizardStep+1} of ${stepCount()}`;
 
   if(wizardMode==="fuel"){
     if(wizardStep===0)renderDateStep();
@@ -295,6 +779,7 @@ function renderStep(){
 
 function renderDateStep(){
   el("question").textContent="What date is it?";
+
   setContent(`
     <div class="form-grid">
       <div>
@@ -311,6 +796,7 @@ function renderDateStep(){
 
 function renderArriveLeaveStep(){
   el("question").textContent="What time did you arrive and leave?";
+
   setContent(`
     <div class="form-grid">
       <div>
@@ -337,6 +823,7 @@ function renderArriveLeaveStep(){
 function renderLocationStep(){
   const locations=wizardMode==="load"?loadLocations:tipLocations;
   el("question").textContent=wizardMode==="load"?"Where did you load?":"Where did you tip?";
+
   setContent(`
     <div class="choice-grid">
       ${locations.map(location=>`
@@ -350,9 +837,14 @@ function renderLocationStep(){
 
 function autoProduct(location){
   if(draft.product||location==="Blank")return;
-  if(location==="Crayford"&&wizardMode==="load")draft.product="Bails";
-  else if(location==="Sheerness"||location==="Canterbury")draft.product="Bails";
-  else draft.product="Loose";
+
+  if(location==="Crayford"&&wizardMode==="load"){
+    draft.product="Bails";
+  }else if(location==="Sheerness"||location==="Canterbury"){
+    draft.product="Bails";
+  }else{
+    draft.product="Loose";
+  }
 }
 
 function renderTicketStep(){
@@ -377,17 +869,20 @@ function renderTicketStep(){
 
 function renderMaterialStep(){
   el("question").textContent="What material type?";
+
   setContent(`
     <div class="choice-grid">
       <button type="button" class="${draft.product==="Loose"?"selected":""}" onclick="draft.product='Loose';renderMaterialStep()">Loose</button>
       <button type="button" class="${draft.product==="Bails"?"selected":""}" onclick="draft.product='Bails';renderMaterialStep()">Bails</button>
     </div>
   `);
+
   renderSummary();
 }
 
 function renderFuelLitresStep(){
   el("question").textContent="How many litres?";
+
   setContent(`
     <div class="form-grid">
       <div>
@@ -400,6 +895,7 @@ function renderFuelLitresStep(){
 
 function renderFuelMileageStep(){
   el("question").textContent="What mileage?";
+
   setContent(`
     <div class="form-grid">
       <div>
@@ -424,7 +920,14 @@ function renderFuelMileageStep(){
 
 function renderFuelConfirmStep(){
   el("question").textContent="Submit fuel entry?";
-  setContent(`<p class="status">This will add a fuel-only row with diesel and mileage filled in.</p>`);
+
+  setContent(`
+    <p class="status">This will add a fuel-only row with diesel and mileage filled in.</p>
+    <div style="margin-top:12px">
+      <button class="primary" type="button" onclick="submitWizard()">Add fuel entry</button>
+    </div>
+  `);
+
   renderSummary();
 }
 
@@ -442,6 +945,7 @@ function renderSummary(){
     <strong>Diesel:</strong> ${diesel}<br>
     <strong>Mileage:</strong> ${mileage}
   `;
+
   el("summaryBox").classList.remove("hidden");
 }
 
@@ -467,12 +971,10 @@ function saveCurrentStepValues(){
     draft.ticket=el("wizTicket").value.trim();
   }
 
-  if(wizardMode==="fuel"&&(wizardStep===1||wizardStep===2)){
-    if(el("wizDiesel"))draft.diesel=el("wizDiesel").value.trim();
-    if(el("wizMileage"))draft.mileage=el("wizMileage").value.trim();
-    if(el("wizMileageType"))draft.mileageType=el("wizMileageType").value;
-    if(el("wizVehicle"))draft.vehicle=el("wizVehicle").value.trim();
-  }
+  if(el("wizDiesel"))draft.diesel=el("wizDiesel").value.trim();
+  if(el("wizMileage"))draft.mileage=el("wizMileage").value.trim();
+  if(el("wizMileageType"))draft.mileageType=el("wizMileageType").value;
+  if(el("wizVehicle"))draft.vehicle=el("wizVehicle").value.trim();
 }
 
 function validateStep(){
@@ -486,10 +988,12 @@ function validateStep(){
       alert("Please enter litres.");
       return false;
     }
+
     if(wizardStep===2&&!draft.mileage){
       alert("Please enter mileage.");
       return false;
     }
+
     return true;
   }
 
@@ -513,6 +1017,7 @@ function validateStep(){
 
 function nextStep(){
   saveCurrentStepValues();
+
   if(!validateStep())return;
 
   if(wizardStep<stepCount()-1){
@@ -527,10 +1032,13 @@ function latestOpenRowIndex(){
   for(let i=rows.length-1;i>=0;i--){
     if(rows[i].loadedAt&&!rows[i].tippedAt)return i;
   }
+
   return -1;
 }
 
 function submitWizard(){
+  saveCurrentStepValues();
+
   const diesel=draft.diesel?`${draft.diesel}L`:"";
   const mileage=draft.mileage?`${draft.mileageType||""}${draft.mileage} km`:"";
   const vehicle=draft.vehicle||el("vehicleDefault").value||"GF20NXM";
@@ -563,8 +1071,10 @@ function submitWizard(){
     const openIndex=latestOpenRowIndex();
 
     if(openIndex>=0){
+      rows[openIndex].dateDay=draft.dateDay;
       rows[openIndex].tippedAt=formatEventLocation();
       rows[openIndex].tipTicket=draft.location==="Blank"?"":draft.ticket;
+
       if(draft.product)rows[openIndex].product=draft.product;
       if(vehicle)rows[openIndex].vehicle=vehicle;
     }else{
@@ -639,7 +1149,9 @@ function render(){
     const tr=document.createElement("tr");
     tr.className="data-row";
 
-    if(row.loadedAt&&!row.tippedAt)tr.classList.add("open-row");
+    if(row.loadedAt&&!row.tippedAt){
+      tr.classList.add("open-row");
+    }
 
     const dayShown=row.dateDay===previousDay?"":row.dateDay;
     previousDay=row.dateDay;
@@ -696,6 +1208,7 @@ function render(){
 
 function deleteRow(index){
   if(!confirm("Delete this row?"))return;
+
   rows.splice(index,1);
   saveRows();
   render();
@@ -703,6 +1216,7 @@ function deleteRow(index){
 
 function moveUp(index){
   if(index<=0)return;
+
   [rows[index-1],rows[index]]=[rows[index],rows[index-1]];
   saveRows();
   render();
@@ -710,6 +1224,7 @@ function moveUp(index){
 
 function moveDown(index){
   if(index>=rows.length-1)return;
+
   [rows[index+1],rows[index]]=[rows[index],rows[index+1]];
   saveRows();
   render();
@@ -717,6 +1232,7 @@ function moveDown(index){
 
 function clearAll(){
   if(!confirm("Clear all rows?"))return;
+
   rows=[];
   saveRows();
   render();
@@ -730,9 +1246,11 @@ function printPdf(){
 
 function csvEscape(value){
   value=String(value??"");
+
   if(value.includes(",")||value.includes('"')||value.includes("\n")){
     return '"' + value.replaceAll('"','""') + '"';
   }
+
   return value;
 }
 
@@ -763,9 +1281,11 @@ function downloadCsv(){
   const blob=new Blob([csv.join("\n")],{type:"text/csv;charset=utf-8"});
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");
+
   a.href=url;
   a.download="rmu-runsheet.csv";
   a.click();
+
   URL.revokeObjectURL(url);
 }
 
