@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>RMU Runsheet</title>
+
 <style>
 :root{
   --bg:#020617;
@@ -31,7 +32,7 @@ body{
 h1{margin:0;font-size:36px;letter-spacing:-.04em;line-height:1}
 h2{margin:0 0 8px;font-size:22px;letter-spacing:-.02em}
 p{margin:0}
-input,select,button{
+input,select,button,textarea{
   width:100%;
   min-height:50px;
   border-radius:14px;
@@ -39,13 +40,17 @@ input,select,button{
   font:inherit;
   padding:11px 12px;
 }
-input,select{
+textarea{
+  min-height:72px;
+  resize:vertical;
+}
+input,select,textarea{
   background:rgba(2,6,23,.58);
   color:var(--text);
   outline:none;
 }
-input::placeholder{color:#71819b}
-input:focus,select:focus{
+input::placeholder,textarea::placeholder{color:#71819b}
+input:focus,select:focus,textarea:focus{
   border-color:rgba(245,158,11,.75);
   box-shadow:0 0 0 4px rgba(245,158,11,.14);
 }
@@ -111,7 +116,7 @@ details.panel[open] summary::after{content:"▴"}
   padding:0 16px 16px;
   align-items:center;
 }
-.meta label,.form-grid label{
+.meta label,.form-grid label,.edit-grid label{
   color:#d1d9e8;
   font-size:13px;
   font-weight:800;
@@ -144,8 +149,8 @@ details.panel[open] summary::after{content:"▴"}
   letter-spacing:.08em;
   box-shadow:0 14px 35px rgba(0,0,0,.28);
 }
-.wizard{border-color:rgba(245,158,11,.28)}
-.wizard-header{
+.wizard,.edit-card{border-color:rgba(245,158,11,.28)}
+.wizard-header,.edit-header{
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -174,15 +179,20 @@ details.panel[open] summary::after{content:"▴"}
   min-height:64px;
   font-size:18px;
 }
-.form-grid label{
+.form-grid label,.edit-grid label{
   display:block;
   margin-bottom:5px;
 }
-.wizard-actions{
+.wizard-actions,.edit-actions{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:10px;
   margin-top:14px;
+}
+.edit-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
 }
 .summary-box{
   background:rgba(2,6,23,.40);
@@ -288,7 +298,7 @@ tbody td{
 }
 .mobile-actions{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(4,1fr);
   gap:8px;
   margin-top:10px;
 }
@@ -310,7 +320,7 @@ tbody td{
   .dashboard{grid-template-columns:1fr}
   .big-action{min-height:112px;font-size:28px}
   .meta{grid-template-columns:1fr}
-  .export-actions,.form-grid,.choice-grid{grid-template-columns:1fr 1fr}
+  .export-actions,.form-grid,.choice-grid,.edit-grid{grid-template-columns:1fr 1fr}
   .table-wrap{display:none}
   .mobile-cards{display:block}
 }
@@ -329,6 +339,7 @@ tbody td{
   details.panel,
   #dashboardCard,
   #wizardCard,
+  #editCard,
   .mobile-cards{
     display:none!important;
   }
@@ -487,6 +498,64 @@ tbody td{
   </div>
 </div>
 
+<div id="editCard" class="card edit-card no-print hidden">
+  <div class="edit-header">
+    <div>
+      <div class="step-label">Edit entry</div>
+      <div class="question">Change this row</div>
+    </div>
+    <button style="max-width:110px" onclick="cancelEdit()">Cancel</button>
+  </div>
+
+  <p class="status" style="margin-bottom:12px">
+    You can edit any field. To make a time blank, remove the time from the Loaded at or Tipped at text.
+  </p>
+
+  <div class="edit-grid">
+    <div>
+      <label>Date / Day</label>
+      <input id="editDateDay" placeholder="Mon 27/04/26">
+    </div>
+    <div>
+      <label>Loaded at</label>
+      <input id="editLoadedAt" placeholder="Rainham 16:58-18:07">
+    </div>
+    <div>
+      <label>Load ticket number</label>
+      <input id="editLoadTicket" placeholder="RMP-SW8965">
+    </div>
+    <div>
+      <label>Tipped at</label>
+      <input id="editTippedAt" placeholder="Sheerness 13:45-15:17">
+    </div>
+    <div>
+      <label>Tipped ticket number</label>
+      <input id="editTipTicket" placeholder="172489">
+    </div>
+    <div>
+      <label>Product</label>
+      <input id="editProduct" placeholder="Loose / Bails / Fuel">
+    </div>
+    <div>
+      <label>Vehicle</label>
+      <input id="editVehicle" placeholder="GF20NXM">
+    </div>
+    <div>
+      <label>Diesel</label>
+      <input id="editDiesel" placeholder="286L">
+    </div>
+    <div>
+      <label>Mileage</label>
+      <input id="editMileage" placeholder="462010 km">
+    </div>
+  </div>
+
+  <div class="edit-actions">
+    <button class="primary" onclick="saveEdit()">Save changes</button>
+    <button onclick="cancelEdit()">Cancel</button>
+  </div>
+</div>
+
 <div class="print-title">
   <strong>RMU Runsheet</strong><br>
   <strong>Driver: <span id="printDriver"></span></strong><br>
@@ -532,13 +601,14 @@ tbody td{
 <div id="mobileCards" class="mobile-cards no-print"></div>
 
 <script>
-const rowsKey="rmuRunsheetLinearRowsV8";
-const settingsKey="rmuRunsheetLinearSettingsV8";
+const rowsKey="rmuRunsheetLinearRowsV9";
+const settingsKey="rmuRunsheetLinearSettingsV9";
 
 let rows=[];
 let wizardMode="";
 let wizardStep=0;
 let draft={};
+let editIndex=null;
 
 const loadLocations=["Camberley","Crayford","Whites","Rainham","SUEZ","Other / Manual"];
 const tipLocations=["Whites","Rainham","Canterbury","Sheerness","Oakleaf","Crayford","Blank","Other / Manual"];
@@ -676,6 +746,7 @@ function startWizard(mode){
 
   el("dashboardCard").classList.add("hidden");
   el("wizardCard").classList.remove("hidden");
+  el("editCard").classList.add("hidden");
   renderStep();
 }
 
@@ -1006,12 +1077,6 @@ function nextStep(){
   }
 }
 
-/*
-  IMPORTANT FIX:
-  This only returns an open load on the SAME date as the tip.
-  A Monday load will not be paired with a Tuesday tip.
-  A Tuesday tip will therefore stay under Tuesday unless there is already a Tuesday load waiting.
-*/
 function latestOpenRowIndexForSameDay(dateDay){
   for(let i=rows.length-1;i>=0;i--){
     if(rows[i].dateDay===dateDay && rows[i].loadedAt && !rows[i].tippedAt){
@@ -1080,6 +1145,55 @@ function submitWizard(){
   saveRows();
   render();
   cancelWizard();
+}
+
+function startEdit(index){
+  editIndex=index;
+  const row=rows[index];
+
+  if(!row)return;
+
+  el("editDateDay").value=row.dateDay||"";
+  el("editLoadedAt").value=row.loadedAt||"";
+  el("editLoadTicket").value=row.loadTicket||"";
+  el("editTippedAt").value=row.tippedAt||"";
+  el("editTipTicket").value=row.tipTicket||"";
+  el("editProduct").value=row.product||"";
+  el("editVehicle").value=row.vehicle||"";
+  el("editDiesel").value=row.diesel||"";
+  el("editMileage").value=row.mileage||"";
+
+  el("dashboardCard").classList.add("hidden");
+  el("wizardCard").classList.add("hidden");
+  el("editCard").classList.remove("hidden");
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function saveEdit(){
+  if(editIndex===null || !rows[editIndex])return;
+
+  rows[editIndex]={
+    dateDay:el("editDateDay").value.trim(),
+    loadedAt:el("editLoadedAt").value.trim(),
+    loadTicket:el("editLoadTicket").value.trim(),
+    tippedAt:el("editTippedAt").value.trim(),
+    tipTicket:el("editTipTicket").value.trim(),
+    product:el("editProduct").value.trim(),
+    vehicle:el("editVehicle").value.trim(),
+    diesel:el("editDiesel").value.trim(),
+    mileage:el("editMileage").value.trim()
+  };
+
+  saveRows();
+  render();
+  cancelEdit();
+}
+
+function cancelEdit(){
+  editIndex=null;
+  el("editCard").classList.add("hidden");
+  el("dashboardCard").classList.remove("hidden");
 }
 
 function headerMileageRows(){
@@ -1177,6 +1291,7 @@ function renderTable(){
     if(index>=headerCount){
       const real=index-headerCount;
       editTd.innerHTML=`
+        <button class="small-btn" onclick="startEdit(${real})">Edit</button>
         <button class="small-btn" onclick="moveUp(${real})">↑</button>
         <button class="small-btn" onclick="moveDown(${real})">↓</button>
         <button class="small-btn" onclick="deleteRow(${real})">Delete</button>
@@ -1241,6 +1356,7 @@ function renderMobileCards(){
       const actions=document.createElement("div");
       actions.className="mobile-actions";
       actions.innerHTML=`
+        <button class="small-btn" onclick="startEdit(${real})">Edit</button>
         <button class="small-btn" onclick="moveUp(${real})">↑</button>
         <button class="small-btn" onclick="moveDown(${real})">↓</button>
         <button class="small-btn" onclick="deleteRow(${real})">Delete</button>
