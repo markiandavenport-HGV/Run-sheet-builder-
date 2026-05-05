@@ -532,16 +532,16 @@ tbody td{
 <div id="mobileCards" class="mobile-cards no-print"></div>
 
 <script>
-const rowsKey="rmuRunsheetLinearRowsV7";
-const settingsKey="rmuRunsheetLinearSettingsV7";
+const rowsKey="rmuRunsheetLinearRowsV8";
+const settingsKey="rmuRunsheetLinearSettingsV8";
 
 let rows=[];
 let wizardMode="";
 let wizardStep=0;
 let draft={};
 
-const loadLocations=["Camberley","Crayford","Whites","Rainham","SUEZ"];
-const tipLocations=["Whites","Rainham","Canterbury","Sheerness","Oakleaf","Crayford","Blank"];
+const loadLocations=["Camberley","Crayford","Whites","Rainham","SUEZ","Other / Manual"];
+const tipLocations=["Whites","Rainham","Canterbury","Sheerness","Oakleaf","Crayford","Blank","Other / Manual"];
 
 const exportHeaders=[
   "Date / Day",
@@ -640,9 +640,19 @@ function timeRange(){
 }
 
 function formatEventLocation(){
-  if(draft.location==="Blank")return"";
-  if(draft.location&&timeRange())return`${draft.location} ${timeRange()}`;
-  return draft.location||"";
+  let location=draft.location;
+
+  if(location==="Blank")return"";
+
+  if(location==="Other / Manual"){
+    location=(draft.manualLocation||"").trim();
+  }
+
+  if(!location)return"";
+
+  if(timeRange())return`${location} ${timeRange()}`;
+
+  return location;
 }
 
 function startWizard(mode){
@@ -655,6 +665,7 @@ function startWizard(mode){
     arriveTime:nowTimeValue(),
     leaveTime:nowTimeValue(),
     location:"",
+    manualLocation:"",
     ticket:"",
     product:"",
     diesel:"",
@@ -757,12 +768,32 @@ function renderLocationStep(){
   setContent(`
     <div class="choice-grid">
       ${locations.map(location=>`
-        <button type="button" class="${draft.location===location?"selected":""}" onclick="draft.location='${location}';autoProduct('${location}');renderLocationStep()">
+        <button type="button" class="${draft.location===location?"selected":""}" onclick="selectLocation('${location}')">
           ${location}
         </button>
       `).join("")}
     </div>
+
+    ${draft.location==="Other / Manual" ? `
+      <div class="form-grid" style="margin-top:12px">
+        <div>
+          <label>Manual site name</label>
+          <input id="manualLocation" placeholder="Type site name" value="${draft.manualLocation||""}" oninput="draft.manualLocation=this.value">
+        </div>
+      </div>
+    ` : ""}
   `);
+}
+
+function selectLocation(location){
+  draft.location=location;
+
+  if(location!=="Other / Manual"){
+    draft.manualLocation="";
+    autoProduct(location);
+  }
+
+  renderLocationStep();
 }
 
 function autoProduct(location){
@@ -864,7 +895,15 @@ function renderFuelConfirmStep(){
 function renderSummary(){
   const diesel=draft.diesel?`${draft.diesel}L`:"";
   const mileage=draft.mileage?`${draft.mileageType||""}${draft.mileage} km`:"";
-  const location=draft.location==="Blank"?"":(draft.location&&timeRange()?`${draft.location} ${timeRange()}`:draft.location);
+  let location=draft.location==="Blank"?"":draft.location;
+
+  if(location==="Other / Manual"){
+    location=(draft.manualLocation||"").trim();
+  }
+
+  if(location&&timeRange()){
+    location=`${location} ${timeRange()}`;
+  }
 
   el("summaryBox").innerHTML=`
     <strong>Date:</strong> ${draft.dateDay||""}<br>
@@ -895,6 +934,10 @@ function saveCurrentStepValues(){
   if(wizardStep===1&&el("wizArriveTime")){
     draft.arriveTime=el("wizArriveTime").value;
     draft.leaveTime=el("wizLeaveTime").value;
+  }
+
+  if(wizardStep===2&&el("manualLocation")){
+    draft.manualLocation=el("manualLocation").value.trim();
   }
 
   if(wizardStep===3&&el("wizTicket")){
@@ -934,6 +977,11 @@ function validateStep(){
 
   if(wizardStep===2&&!draft.location){
     alert("Please choose a location.");
+    return false;
+  }
+
+  if(wizardStep===2&&draft.location==="Other / Manual"&&!(draft.manualLocation||"").trim()){
+    alert("Please type the manual site name.");
     return false;
   }
 
